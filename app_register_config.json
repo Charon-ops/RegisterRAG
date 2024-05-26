@@ -60,7 +60,7 @@
             }
         },
         "response_gen": {
-            "name": "qwen",
+            "name": "llama3",
             "args": {
                 "router_path": "http://localhost",
                 "port": "10004"

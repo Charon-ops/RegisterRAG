@@ -6,7 +6,7 @@ from websearch import ArxivCallback, BaiduCallback
 from rerank import BgeNormalReranker
 from prompt_gen import BasePromptGen
 from prompt_zip import BasePromptZip, LongLlmLinguaZipper, LlmLingua2Zipper
-from response_gen import BaseResponseGen, QwenResponseGen
+from response_gen import BaseResponseGen, Llama3ResponseGen
 
 LOADER = {"text": TextLoader}
 
@@ -28,4 +28,4 @@ PROMPTZIP = {
     "llmlingua2": LlmLingua2Zipper,
 }
 
-RESPONSEGEN = {"base": BaseResponseGen, "qwen": QwenResponseGen}
+RESPONSEGEN = {"base": BaseResponseGen, "llama3": Llama3ResponseGen}

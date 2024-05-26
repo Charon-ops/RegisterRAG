@@ -2,7 +2,7 @@ import requests
 from .base import ResponseGen
 
 
-class QwenResponseGen(ResponseGen):
+class Llama3ResponseGen(ResponseGen):
     def __init__(self, router_path: str, port: str) -> None:
         super().__init__()
         self.router_path = router_path

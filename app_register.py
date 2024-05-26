@@ -47,9 +47,7 @@ class AppRegister:
             **self.config["prompt_gen"]["args"]
         )
         # self.prompt_zipper = PROMPTGEN[self.config["prompt_zip"]["name"]](**self.config["prompt_zip"]["args"])
-        self.prompt_zipper = PROMPTZIP[self.config["prompt_zip"]["name"]](
-            **self.config["prompt_zip"]["args"]
-        )
+        self.prompt_zipper = PROMPTZIP[self.config["prompt_zip"]["name"]]()
         # self.response_gener = PROMPTGEN[self.config["response_gen"]["name"]](
         #     **self.config["response_gen"]["args"]
         # )
