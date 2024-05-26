@@ -102,7 +102,7 @@ Specific configuration details are detailed in the following demo code block. Yo
             "name": "bge_normal",
             "args": {
                 "router_path": "your service url",
-                "port": "your service port"
+                "port": "your service port",
                 "path": "bge_normal_rerank"
             }
         },
@@ -116,7 +116,7 @@ Specific configuration details are detailed in the following demo code block. Yo
             "name": "llmlingua2",
             "args": {
                 "router_path": "your service url",
-                "port": "your service port"
+                "port": "your service port",
                 "path": "llmlingua2"
             }
         },
