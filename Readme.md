@@ -33,9 +33,11 @@ Clone code from our repository
 git clone https://github.com/Charon-ops/RegisterRAG.git
 ```
 
-### Starting the Service
-
 **Before launching the service, please modify the `docker-compose.yml` file according to your GPU configuration.** Our server is equipped with four graphics cards, and we have deployed all services except for the `zip` service on the third card. You will need to adjust the `NVIDIA_VISIBLE_DEVICES` setting to match the GPU configuration of your own computer.
+
+At the same time, you also need to **modify the mount point of the store service**. Specifically, change the `volumes` section in the `store` service to `path/to/your/data:/app/data`.
+
+### Starting the Service
 
 After making the necessary modifications, you can start the service using the `docker-compose.yml` file. If you haven't previously built the process, it will automatically build without any manual intervention required.
 
