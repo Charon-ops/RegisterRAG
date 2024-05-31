@@ -11,41 +11,58 @@ sentences = ["apple", "banana"]
 
 embs = requests.post(
     url="http://localhost:10000/get_embedding/",
-    json={"text": sentences, "model_type": "bert"},
+    json={"text": sentences, "model_type": "bge"},
 ).json()["embedding"]
 
 requests.post(
     url="http://localhost:10001/ann/add_docs",
-    json={"doc_list": sentences, "doc_emb_list": embs},
+    json={
+        "doc_list": sentences,
+        "doc_emb_list": embs,
+        "doc_index": [0, 1],
+        "doc_name": "test",
+    },
 )
 
 requests.post(
     url="http://localhost:10001/ann/add_docs",
-    json={"doc_list": sentences, "doc_emb_list": embs},
+    json={
+        "doc_list": sentences,
+        "doc_emb_list": embs,
+        "doc_index": [0, 1],
+        "doc_name": "test",
+    },
 )
 
 sentences = ["pear", "watermelon"]
 
 embs = requests.post(
     url="http://localhost:10000/get_embedding/",
-    json={"text": sentences, "model_type": "bert"},
+    json={"text": sentences, "model_type": "bge"},
 ).json()["embedding"]
 
 requests.post(
     url="http://localhost:10001/ann/add_docs",
-    json={"doc_list": sentences, "doc_emb_list": embs},
+    json={
+        "doc_list": sentences,
+        "doc_emb_list": embs,
+        "doc_index": [2, 3],
+        "doc_name": "test",
+    },
 )
 
 search_sentences = ["app"]
 search_embs = requests.post(
     url="http://localhost:10000/get_embedding/",
-    json={"text": search_sentences, "model_type": "bert"},
+    json={"text": search_sentences, "model_type": "bge"},
 ).json()["embedding"]
 
 search_res = requests.post(
-    url="http://localhost:10001/ann/search", json={"query_vec": search_embs, "num": 2}
+    url="http://localhost:10001/ann/search",
+    json={"query_vec": search_embs[0], "num": 2},
 ).json()["knowledges"]
-print("search res", search_res)
+for res in search_res:
+    print("res:", res)
 
 ids = requests.post(
     url="http://localhost:10001/ann/get_ids", json={"docs": ["apple", "banana"]}

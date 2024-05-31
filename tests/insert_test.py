@@ -12,6 +12,8 @@ response = requests.post(
         "file_content": insert_content,
         "file_type": "text",
         "app_name": "wisdomentor",
+        "begin_index": 0,
+        "doc_name": "test_doc",
     },
 )
 

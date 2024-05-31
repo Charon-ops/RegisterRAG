@@ -14,25 +14,37 @@ class AnnStore(Store):
         return
 
     def add_documents(
-        self, documents: List[Document], doc_embeds: List[List[float]]
+        self,
+        documents: List[Document],
+        doc_embeds: List[List[float]],
+        doc_index: List[int],
+        doc_name: str = None,
+        doc_id: int = None,
     ) -> bool:
-        super().add_documents(documents, doc_embeds)
-        result = requests.post(
-            url=f"{self.request_url}/ann/add_docs",
-            json={
-                "doc_list": [doc.page_content for doc in documents],
-                "doc_emb_list": doc_embeds,
-            },
-        )
+        assert len(documents) == len(
+            doc_embeds
+        ), "The length of documents and embeddings should be the same"
+        assert (
+            doc_name is not None or doc_id is not None
+        ), "doc_name or doc_id should be provided"
+        # super().add_documents(documents, doc_embeds)
+        data = {
+            "doc_list": [doc.page_content for doc in documents],
+            "doc_emb_list": doc_embeds,
+            "doc_index": doc_index,
+        }
+        if doc_name is not None:
+            data["doc_name"] = doc_name
+        if doc_id is not None:
+            data["doc_id"] = doc_id
+        result = requests.post(url=f"{self.request_url}/ann/add_docs", json=data)
         if result.status_code != 200:
             raise ValueError(
                 f"Error in add_documents from {self.request_url} with status code {result.status_code} : {result.text}"
             )
         return True
 
-    def search_by_embed(
-        self, query_embed: List[List[float]], k: int = 10
-    ) -> List[Document]:
+    def search_by_embed(self, query_embed: List[float], k: int = 10) -> List[Document]:
         super().search_by_embed(query_embed)
         result = requests.post(
             url=f"{self.request_url}/ann/search",
@@ -42,7 +54,7 @@ class AnnStore(Store):
             raise ValueError(
                 f"Error in search by embedding from {self.request_url} with status code {result.status_code} : {result.text}"
             )
-        results = result.json()["knowledges"][0]
+        results = result.json()["knowledges"]
         return [
             Document(page_content=knowledge) for knowledge in results
         ]  # 这里对Document的构造还需要再测试一下

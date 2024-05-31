@@ -14,6 +14,7 @@ from config import (
     RESPONSEGEN,
     RERANK,
 )
+from logger import RagLogger
 
 
 class AppRegister:
@@ -47,7 +48,9 @@ class AppRegister:
             **self.config["prompt_gen"]["args"]
         )
         # self.prompt_zipper = PROMPTGEN[self.config["prompt_zip"]["name"]](**self.config["prompt_zip"]["args"])
-        self.prompt_zipper = PROMPTZIP[self.config["prompt_zip"]["name"]]()
+        self.prompt_zipper = PROMPTZIP[self.config["prompt_zip"]["name"]](
+            **self.config["prompt_zip"]["args"]
+        )
         # self.response_gener = PROMPTGEN[self.config["response_gen"]["name"]](
         #     **self.config["response_gen"]["args"]
         # )
@@ -92,7 +95,10 @@ class AppRegister:
         res = []
         for db in self.database:
             for i in range(len(query)):
-                recall_res = db.search_by_embed([query_embd[i]])
+                recall_res = db.search_by_embed(query_embd[i])
+                RagLogger().get_logger().info(
+                    f"query {query[i]} recall_res: {recall_res}"
+                )
                 rerank_res = self.reranker.rerank_documents(query[i], recall_res)[:30]
                 res.extend(rerank_res)
         return res

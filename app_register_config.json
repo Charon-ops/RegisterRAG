@@ -46,10 +46,7 @@
         },
         "prompt_gen": {
             "name": "base",
-            "args": {
-                "router_path": "http://localhost",
-                "port": "-1"
-            }
+            "args": {}
         },
         "prompt_zip": {
             "name": "llmlingua2",
