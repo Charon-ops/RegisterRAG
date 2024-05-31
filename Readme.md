@@ -43,7 +43,7 @@ After making the necessary modifications, you can start the service using the `d
 
 ```bash
 cd docker
-docker compose up
+docker-compose up
 cd ..
 ```
 
@@ -55,7 +55,7 @@ If you prefer not to automatically attach to the container, you can add the `-d`
 
 ```bash
 cd docker
-docker compose up -d
+docker-compose up -d
 cd ..
 ```
 
@@ -68,7 +68,7 @@ The building process involves downloading weights, which by default uses the [hf
 If you prefer to start only certain services, use the command below:
 
 ``` bash
-docker compose up embedding
+docker-compose up embedding
 ```
 
 This will launch only the `embedding` service.
@@ -79,7 +79,7 @@ When you need to stop the service, navigate to the Docker directory and execute 
 
 ```bash
 cd docker
-docker compose down
+docker-compose down
 ```
 
 This will terminate all running containers associated with the service.
