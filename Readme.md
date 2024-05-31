@@ -18,6 +18,9 @@
     - [Stopping the Service](#stopping-the-service)
   - [📈 Usage](#-usage)
   - [⚙️ Config](#️-config)
+  - [❓ FAQ and Troubleshooting](#-faq-and-troubleshooting)
+  - [🤝 Contribution Guide](#-contribution-guide)
+  - [📚 More Documentation](#-more-documentation)
 
 ## 🔔 Updates
 
@@ -104,6 +107,8 @@ Start the Register RAG service (default port is 8000)
 uvicorn service:service
 ```
 
+More info about the API can be found [here](https://github.com/Charon-ops/RegisterRAG/tree/feature/pipeline/docs/en/docker).
+
 ## ⚙️ Config
 
 Specific configuration details are detailed in the following demo code block. You can modify the name field and configure the corresponding args field correctly. Please refer to the config_reference.md file for the detailed field correspondences.
@@ -186,3 +191,16 @@ Specific configuration details are detailed in the following demo code block. Yo
     }
 }
 ```
+
+## ❓ FAQ and Troubleshooting
+
+- Startup failure: Check if the configuration in the `docker-compose.yml` file is correct.
+- Service not accessible: Ensure the service has started successfully and check the firewall settings.
+
+## 🤝 Contribution Guide
+
+We welcome code contributions, bug reports, and feature suggestions. Please refer to the [Contribution Guide](https://github.com/Charon-ops/RegisterRAG).
+
+## 📚 More Documentation
+
+For more detailed documentation, please see the [Project Wiki](https://github.com/Charon-ops/RegisterRAG/wiki).
