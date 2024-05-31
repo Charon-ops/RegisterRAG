@@ -1,16 +1,19 @@
 from typing import List
 from fastapi import FastAPI
 from pydantic import BaseModel
-from AnnStore import AnnoyStore
+from EmbeddingStore.AnnStore import AnnoyStore
 
 
 class DocEmbs(BaseModel):
     doc_list: List[str]
     doc_emb_list: List[List[float]]
+    doc_index: List[int] = None
+    doc_name: str = None
+    doc_id: int = None
 
 
 class SearchParams(BaseModel):
-    query_vec: List[List[float]]
+    query_vec: List[float]
     num: int = 50
 
 
@@ -29,8 +32,17 @@ app = FastAPI()
 def add_document(req: DocEmbs):
     doc_list = req.doc_list
     doc_emb_list = req.doc_emb_list
+    doc_index = req.doc_index
+    doc_name = req.doc_name
+    doc_id = req.doc_id
     store = AnnoyStore()
-    store.add_documents(doc_list, doc_emb_list)
+    store.add_documents(
+        doc_list=doc_list,
+        doc_emb_list=doc_emb_list,
+        doc_index=doc_index,
+        doc_name=doc_name,
+        doc_id=doc_id,
+    )
 
 
 @app.post("/ann/search")
