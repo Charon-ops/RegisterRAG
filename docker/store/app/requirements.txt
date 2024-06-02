@@ -1,0 +1,5 @@
+fastapi
+uvicorn
+annoy
+numpy
+scipy
