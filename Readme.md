@@ -107,7 +107,7 @@ Start the Register RAG service (default port is 8000)
 uvicorn service:service
 ```
 
-More info about the API can be found [here](https://github.com/Charon-ops/RegisterRAG/tree/feature/pipeline/docs/en/docker).
+More info about the API can be found [here](https://github.com/Charon-ops/RegisterRAG/wiki/Docker-Service).
 
 ## ⚙️ Config
 
