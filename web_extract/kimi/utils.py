@@ -126,6 +126,7 @@ class Utils:
                 headers={
                     "Authorization": f"Bearer {refresh_token}",
                     "Referer": "https://kimi.moonshot.cn/",
+                    "Content-Encoding": "br",
                     **FAKE_HEADERS,
                 },
                 timeout=15,

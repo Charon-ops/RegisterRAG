@@ -1,5 +1,6 @@
 from typing import List
 import asyncio
+import time
 
 from langchain_core.documents import Document
 
@@ -26,9 +27,15 @@ class KimiExtractor(WebExtractor):
         for url in urls:
             prompt = f"请根据这个问题：{data.query}，总结这个链接的内容。{url}"
             conv = Conversation()
-            await conv.create_conversation()
-            response = await conv.do_conversation(
-                [], [{"role": "user", "content": prompt}]
-            )
-            extract_res.append(Document(page_content=response["content"]))
+            try:
+                await conv.create_conversation(force_reget=True)
+            except:
+                continue
+            try:
+                response = await conv.do_conversation(
+                    [], [{"role": "user", "content": prompt}], force_reget=True
+                )
+            except:
+                continue
+            extract_res.append(Document(page_content=response))
         return extract_res

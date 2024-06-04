@@ -4,3 +4,5 @@ uvicorn==0.29.0
 arxiv==2.1.0
 beautifulsoup4==4.12.3
 langchain-community==0.2.1
+chardet==5.2.0
+brotli==1.1.0
