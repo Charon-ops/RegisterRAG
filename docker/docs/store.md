@@ -27,10 +27,10 @@ sudo docker-compose up
 
   数据挂载路径： `/home/roo/dream/RAG/data/AnnStore`
 
-  - port: 10001
+- port: 10001
   
     path: /ann/add_docs
-    
+
     body:
 
     ```json
@@ -45,8 +45,8 @@ sudo docker-compose up
     }
     ```
 
-      - doc_list： 文档内容
-      - doc_emb_list： 文档对应的向量
+  - doc_list： 文档内容
+  - doc_emb_list： 文档对应的向量
 
     return: None
 
@@ -73,7 +73,7 @@ sudo docker-compose up
     )
     ```
 
-  - port: 10001
+- port: 10001
 
     path: /ann/search
 
@@ -91,8 +91,8 @@ sudo docker-compose up
     }
     ```
 
-      - query_vec: 查询向量
-      - num: 返回结果数量
+  - query_vec: 查询向量
+  - num: 返回结果数量
 
     return:
 
@@ -132,7 +132,7 @@ sudo docker-compose up
     print("search res", search_res)
     ```
 
-  - port: 10001
+- port: 10001
 
     path: /ann/get_ids
 
@@ -165,7 +165,7 @@ sudo docker-compose up
     ).json()["ids"]
     ```
   
-  - port: 10001
+- port: 10001
 
     path: /ann/remove_items
 

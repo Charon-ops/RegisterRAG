@@ -25,7 +25,7 @@ sudo docker-compose up
 
 1. bge-reranker-v2-m3
 
-  - port: 10002
+- port: 10002
 
     path: /bge_normal_rerank
 

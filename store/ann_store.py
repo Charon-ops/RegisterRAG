@@ -20,6 +20,7 @@ class AnnStore(Store):
         doc_index: List[int],
         doc_name: str = None,
         doc_id: int = None,
+        store_name: str = "store",
     ) -> bool:
         assert len(documents) == len(
             doc_embeds
@@ -32,6 +33,7 @@ class AnnStore(Store):
             "doc_list": [doc.page_content for doc in documents],
             "doc_emb_list": doc_embeds,
             "doc_index": doc_index,
+            "store_name": store_name,
         }
         if doc_name is not None:
             data["doc_name"] = doc_name
@@ -44,11 +46,13 @@ class AnnStore(Store):
             )
         return True
 
-    def search_by_embed(self, query_embed: List[float], k: int = 10) -> List[Document]:
+    def search_by_embed(
+        self, query_embed: List[float], k: int = 10, store_name: str = "store"
+    ) -> List[Document]:
         super().search_by_embed(query_embed)
         result = requests.post(
             url=f"{self.request_url}/ann/search",
-            json={"query_vec": query_embed, "num": k},
+            json={"query_vec": query_embed, "num": k, "store_name": store_name},
         )
         if result.status_code != 200:
             raise ValueError(
@@ -59,20 +63,25 @@ class AnnStore(Store):
             Document(page_content=knowledge) for knowledge in results
         ]  # 这里对Document的构造还需要再测试一下
 
-    def get_id_by_docs(self, docs: List[Document]) -> List[int]:
+    def get_id_by_docs(
+        self, docs: List[Document], store_name: str = "store"
+    ) -> List[int]:
         super().get_id_by_docs(docs)
         results = requests.post(
             url=f"{self.request_url}/ann/get_ids",
-            json={"docs": [doc.page_content for doc in docs]},
+            json={"docs": [doc.page_content for doc in docs], "store_name": store_name},
         )
         if results.status_code != 200:
             raise Exception(f"Failed to get ids: {results.text}")
         return results.json()["ids"]
 
-    def delete_documents_by_ids(self, doc_ids: List[int]) -> bool:
+    def delete_documents_by_ids(
+        self, doc_ids: List[int], store_name: str = "store"
+    ) -> bool:
         super().delete_documents_by_ids(doc_ids)
         result = requests.delete(
-            url=f"{self.request_url}/ann/remove_items", json={"ids": doc_ids}
+            url=f"{self.request_url}/ann/remove_items",
+            json={"ids": doc_ids, "store_name": store_name},
         )
         if result.status_code != 200:
             raise ValueError(

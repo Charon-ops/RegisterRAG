@@ -10,3 +10,4 @@ class InsertDocParams(BaseModel):
     begin_index: int = 0
     doc_name: str = None
     doc_id: int = None
+    store_name: str = "store"

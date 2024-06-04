@@ -4,25 +4,29 @@ import threading
 
 
 class Store(ABC):
-    _instance = None
+    _instance = {}
     _lock = threading.Lock()
 
-    def __new__(cls, *args, **kwargs):
-        if not cls._instance:
-            with cls._lock:
-                if not cls._instance:
-                    cls._instance = super(Store, cls).__new__(cls)
-                    cls._instance.__initialized = False
-        return cls._instance
+    def __new__(cls, index_path: str = None, store_name: str = "store"):
+        with cls._lock:
+            if index_path:
+                store_name = index_path.split("/")[-1].split(".")[0]
+            if store_name not in cls._instance:
+                cls._instance[store_name] = super(Store, cls).__new__(cls)
+                cls._instance[store_name].__initialized = False
+
+        return cls._instance[store_name]
 
     def __init__(
         self,
         index_path: str = None,
+        store_name: str = "store",
     ):
         if hasattr(self, "__initialized") and self.__initialized:
             return
         self.index_path = index_path
         self.lock = threading.Lock()
+        self.store_name = store_name
         self.__initialized = True
 
     @abstractmethod

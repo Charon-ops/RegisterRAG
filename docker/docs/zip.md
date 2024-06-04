@@ -25,12 +25,12 @@ sudo docker-compose up
 
 1. 使用 LongLLMLingua
 
-  - port: 10003
+- port: 10003
 
     path: /longllmlingua
 
     body:
-    
+
     ``` json
     {
       "context": ["context1", "context2", ...],
@@ -50,14 +50,14 @@ sudo docker-compose up
     }
     ```
 
-2. 使用 LLMLingua2
+1. 使用 LLMLingua2
 
-  - port: 10003
+- port: 10003
 
     path: /llmlingua2
 
     body:
-    
+
     ``` json
     {
       "context": ["context1", "context2", ...],

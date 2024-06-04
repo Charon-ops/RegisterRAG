@@ -16,17 +16,22 @@ class AnnoyStore(Store):
         db_path: str = None,
         dis_type: str = "angular",
         emb_len: int = 1024,
+        store_name: str = "store",
     ):
-        super().__init__(index_path)
+        super().__init__(index_path, store_name)
         self.index_path = (
             index_path
             if index_path
-            else os.path.join(os.path.dirname(__file__), "..", "data", "store.ann")
+            else os.path.join(
+                os.path.dirname(__file__), "..", "data", self.store_name + ".ann"
+            )
         )
         self.db_path = (
             db_path
             if db_path
-            else os.path.join(os.path.dirname(__file__), "..", "data", "store.db")
+            else os.path.join(
+                os.path.dirname(__file__), "..", "data", self.store_name + ".db"
+            )
         )
         self.dis_type = dis_type
         self.emb_len = emb_len
@@ -44,8 +49,9 @@ class AnnoyStore(Store):
         doc_id = connector.get_doc_id_by_chunk_id(chunk_id)
         tree = connector.read_tree(doc_id)
 
-        current_emb = connector.get_embedding_by_chunk_id(chunk_id)
+        current_emb = np.array(connector.get_embedding_by_chunk_id(chunk_id))
         current_dis = cosine(query_embd, current_emb)
+        query_embd = np.array(query_embd)
 
         res = connector.get_content_by_chunk_id(chunk_id)
         can_merge = True
@@ -63,45 +69,29 @@ class AnnoyStore(Store):
             )
 
             predecessor_emb = (
-                connector.get_embedding_by_chunk_id(predecessor_node.id)
+                np.array(connector.get_embedding_by_chunk_id(predecessor_node.id))
                 if predecessor_node is not None
                 else None
             )
             successor_emb = (
-                connector.get_embedding_by_chunk_id(successor_node.id)
+                np.array(connector.get_embedding_by_chunk_id(successor_node.id))
                 if successor_node is not None
                 else None
             )
 
             with_predecessor_dis = (
-                cosine(
-                    query_embd,
-                    (
-                        (np.array(predecessor_emb) + np.array(current_emb)) / 2.0
-                    ).tolist(),
-                )
+                cosine(query_embd, (current_emb + predecessor_emb) / 2.0)
                 if predecessor_emb is not None
                 else 2.0
             )
             with_successor_dis = (
-                cosine(
-                    query_embd,
-                    ((np.array(successor_emb) + np.array(current_emb)) / 2.0).tolist(),
-                )
+                cosine(query_embd, (current_emb + successor_emb) / 2.0)
                 if successor_emb is not None
                 else 2.0
             )
             with_pre_and_successor_dis = (
                 cosine(
-                    query_embd,
-                    (
-                        (
-                            np.array(predecessor_emb)
-                            + np.array(current_emb)
-                            + np.array(successor_emb)
-                        )
-                        / 3.0
-                    ).tolist(),
+                    query_embd, (current_emb + predecessor_emb + successor_emb) / 3.0
                 )
                 if predecessor_emb is not None and successor_emb is not None
                 else 2.0
@@ -126,14 +116,17 @@ class AnnoyStore(Store):
                 )
                 min_index = predecessor_node.index
                 max_index = successor_node.index
+                current_emb = (current_emb + predecessor_emb + successor_emb) / 3.0
             elif min_dis == with_predecessor_dis:
                 res = (
                     connector.get_content_by_chunk_id(predecessor_node.id) + "\n" + res
                 )
                 min_index = predecessor_node.index
+                current_emb = (current_emb + predecessor_emb) / 2.0
             elif min_dis == with_successor_dis:
                 res = res + "\n" + connector.get_content_by_chunk_id(successor_node.id)
                 max_index = successor_node.index
+                current_emb = (current_emb + successor_emb) / 2.0
             else:
                 can_merge = False
         return res

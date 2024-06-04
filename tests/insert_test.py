@@ -1,7 +1,7 @@
 import os
 import requests
 
-file_path = os.path.join(os.path.dirname(__file__), "insert.txt")
+file_path = os.path.join(os.path.dirname(__file__), "merge.txt")
 
 with open(file_path, "r") as f:
     insert_content = f.read()
@@ -13,7 +13,8 @@ response = requests.post(
         "file_type": "text",
         "app_name": "wisdomentor",
         "begin_index": 0,
-        "doc_name": "test_doc",
+        "doc_name": "microbiology",
+        "store_name": "wisdomentor",
     },
 )
 
