@@ -10,7 +10,7 @@ class Evaluator(ABC):
     def __init__(self, config_path: str) -> None:
         assert os.path.isfile(
             config_path
-        ), f"config_path: {config_path} does not exist."
+        ), f"config_file: {config_path} does not exist."
         self.config_path = config_path
         self.config = self.load_config()
         self.query: List[str] = None
@@ -24,11 +24,11 @@ class Evaluator(ABC):
         config = self.init_config(config)
         return EvaluateConfig(**config)
 
-    def load_query(self) -> List[str]:
+    def load_query(self) -> None:
         with open(self.config.query_json_path, "r") as f:
             self.query = json.load(f)["query"]
 
-    def load_response(self) -> List[str]:
+    def load_response(self) -> None:
         with open(self.config.response_json_path, "r") as f:
             self.response = json.load(f)["response"]
 

@@ -83,6 +83,7 @@ class AppRegister:
         return contents
 
     def get_prompt(self, query: str, contents: List[Document]) -> str:
+        contents = contents[::-1]
         return self.prompt_gener.prompt_gen(query, contents)
 
     def zip_prompt(self, query: str, prompt: List[Document]) -> str:
@@ -91,14 +92,27 @@ class AppRegister:
     def get_response(self, prompt: str) -> str:
         return self.response_gener.response_gen(prompt)
 
-    def recall(self, query: List[str], query_embd: List[List[float]]) -> List[Document]:
+    def recall(
+        self,
+        query: List[str],
+        query_embd: List[List[float]],
+        retrieve_top_k: int = 30,
+        rerank_top_k: int = 10,
+        store_name: str = "register_rag_store",
+    ) -> List[List[Document]]:
         res = []
         for db in self.database:
             for i in range(len(query)):
-                recall_res = db.search_by_embed(query_embd[i])
+                recall_res = db.search_by_embed(
+                    query_embed=query_embd[i],
+                    top_k=retrieve_top_k,
+                    store_name=store_name,
+                )
                 RagLogger().get_logger().info(
                     f"query {query[i]} recall_res: {recall_res}"
                 )
-                rerank_res = self.reranker.rerank_documents(query[i], recall_res)[:30]
-                res.extend(rerank_res)
+                rerank_res = self.reranker.rerank_documents(query[i], recall_res)[
+                    :rerank_top_k
+                ]
+                res.append(rerank_res)
         return res

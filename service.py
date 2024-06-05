@@ -48,7 +48,7 @@ def get_response_from_llm(get_response_params: GetResponseParams) -> str:
         if web_content.page_content
     ]
     RagLogger().get_logger().info(f"web_contents: {logged_web_contents}")
-    repo_contents = app.recall([get_response_params.query_content], [query_embded])
+    repo_contents = app.recall([get_response_params.query_content], [query_embded])[0]
     logged_repo_contents = [
         repo_content.page_content
         for repo_content in repo_contents

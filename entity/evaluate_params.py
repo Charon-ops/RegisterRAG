@@ -13,3 +13,12 @@ class RecallEvaluateConfig(EvaluateConfig):
     embedding_port: str
     max_tries: int
     save_path: str
+
+
+class OurEvaluateConfig(EvaluateConfig):
+    app_name: str
+    store_name: str
+    recall_json_path: str
+    retrieve_top_k: int
+    rerank_top_k: int
+    save_path: str
