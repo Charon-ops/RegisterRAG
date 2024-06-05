@@ -44,54 +44,53 @@ class OurEvaluator(Evaluator):
         )
 
         eval_res = {}
-        eval_res["retrieve_recall"] = self.retrieve_recall(recall_res) * 100
-        eval_res["recall_precision"] = self.recall_precision(recall_res) * 100
+        eval_res["retrieve_precision"],
+        eval_res["retrieve_recall"],
+        eval_res["retrieve_f1"],
+        eval_res["retrieve_hitrate"] = self.retrieve_eval(recall_res) * 100
         eval_res["content_precision"] = self.content_precision(recall_res) * 100
         eval_res["answer_sim"] = self.answer_sim(app, recall_res) * 100
         eval_res["zipped_answer_sim"] = self.zipped_answer_sim(app, recall_res) * 100
         eval_res["answer_accuracy"] = self.answer_accuracy(app, recall_res) * 100
         eval_res["qa_revelance"] = self.qa_relevance(app, recall_res) * 100
 
-    def retrieve_recall(self, recall_res: List[List[Document]]) -> float:
-        assert len(recall_res) == len(self.recall_ans)
+    def retrieve_eval(self, recall_res: List[List[Document]]) -> float:
         total_len = len(recall_res)
-        hit = 0
-        for i, each_query_recall in enumerate(recall_res):
-            if i % 500 == 0:
-                RagLogger().get_logger().info(
-                    f"Calculating hitrate: {i}/{total_len}..."
-                )
-            current_hit = 0
-            for i, doc in enumerate(each_query_recall):
-                for ans in self.recall_ans[i]["recall_ans"]:
-                    if doc.page_content in ans or ans in doc.page_content:
-                        current_hit += 1
-                current_hit /= len(self.recall_ans[i]["recall_ans"])
-            hit += current_hit
-        return hit / total_len
 
-    def recall_precision(self, recall_res: List[List[Document]]) -> float:
-        assert len(recall_res) == len(self.recall_ans)
-        total_len = len(recall_res)
-        acc = 0.0
+        precision = 0.0
+        recall = 0.0
+        f1 = 0.0
+        hitrate = 0.0
 
         for i, each_query_recall in enumerate(recall_res):
-            if i % 500 == 0:
+            if i % 100 == 0:
                 RagLogger().get_logger().info(
-                    f"Calculating recall accuracy: {i}/{total_len}..."
+                    f"Calculating retrieve accuracy: {i}/{total_len}..."
                 )
-
-            current_acc = 0
-            for i, doc in enumerate(each_query_recall):
-                is_hit = False
+                is_reaclled = [False] * len(each_query_recall)
+                hit_num = 0
                 for ans in self.recall_ans[i]["recall_ans"]:
-                    if doc.page_content in ans or ans in doc.page_content:
-                        is_hit = True
-                        break
-                if is_hit:
-                    current_acc += 1 / len(self.recall_ans[i]["recall_ans"])
-            acc += current_acc
-        return acc / total_len
+                    for j, doc in enumerate(each_query_recall):
+                        if doc.page_content in ans or ans in doc.page_content:
+                            is_reaclled[j] = True
+                            hit_num += 1
+                            break
+                current_tp = sum(is_reaclled)
+                current_fp = len(each_query_recall) - current_tp
+                current_fn = len(self.recall_ans[i]["recall_ans"]) - current_tp
+                current_precision = current_tp / (current_tp + current_fp)
+                current_recall = current_tp / (current_tp + current_fn)
+                current_f1 = (
+                    2
+                    * current_precision
+                    * current_recall
+                    / (current_precision + current_recall)
+                )
+                precision += current_precision / total_len
+                recall += current_recall / total_len
+                f1 += current_f1 / total_len
+                hitrate += hit_num / len(self.recall_ans[i]["recall_ans"]) / total_len
+        return precision, recall, f1, hitrate
 
     def answer_sim(self, app: AppRegister, recall_res: List[List[Document]]) -> float:
         assert len(recall_res) == len(self.recall_ans)
@@ -115,7 +114,7 @@ class OurEvaluator(Evaluator):
         acc = 0.0
 
         for i, each_query_recall in enumerate(recall_res):
-            if i % 500 == 0:
+            if i % 100 == 0:
                 RagLogger().get_logger().info(
                     f"Calculating content accuracy: {i}/{total_len}..."
                 )
