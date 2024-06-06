@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from config.DatasetConfig import DatasetConfig
+from configs.DatasetConfig import DatasetConfig
 
 
 class DatasetLoader(ABC):

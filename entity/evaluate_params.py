@@ -15,10 +15,10 @@ class RecallEvaluateConfig(EvaluateConfig):
     save_path: str
 
 
-class OurEvaluateConfig(EvaluateConfig):
+class OurEvaluateConfig(BaseModel):
     app_name: str
     store_name: str
-    recall_json_path: str
     retrieve_top_k: int
     rerank_top_k: int
+    data_path: str
     save_path: str

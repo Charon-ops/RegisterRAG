@@ -1,4 +1,3 @@
-from abc import abstractmethod
 from typing import Dict, Any
 import os
 import json
@@ -8,7 +7,6 @@ from .base import Config
 
 class DatasetConfig(Config):
     def __init__(self, data_path: str) -> None:
-        super().__init__()
         self.data_path = data_path
         self._config = self.load_config()
 

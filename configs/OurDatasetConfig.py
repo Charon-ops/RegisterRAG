@@ -12,9 +12,9 @@ class OurDatasetConfig(DatasetConfig):
     def load_config(self) -> Dict[str, Any]:
         config_path = os.path.join(self.data_path, "config.json")
         with open(config_path, "r") as f:
-            config = json.load(f)
-        assert "insert" in config, "config does not have enough keys"
-        if config["insert"]:
+            self.config = json.load(f)
+        assert "insert" in self.config, "config does not have enough keys"
+        if self.config["insert"]:
             assert self.config.keys() >= {
                 "chunk_size",
                 "embedding_router_path",
@@ -28,7 +28,7 @@ class OurDatasetConfig(DatasetConfig):
                 "store_name",
             }, "config does not have enough keys"
 
-        return config
+        return self.config
 
     @property
     def insert(self) -> bool:

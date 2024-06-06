@@ -1,4 +1,4 @@
-from typing import List, Dict
+from typing import List, Dict, Tuple
 import os
 import json
 
@@ -7,7 +7,7 @@ from langchain_core.documents import Document
 from splitter import RecursiveSplitter
 from embedding import BgeEmbedding
 from store import AnnStore
-from config import OurDatasetConfig
+from configs import OurDatasetConfig
 from .DatasetLoader import DatasetLoader
 
 
@@ -42,10 +42,10 @@ class OurDatasetLoader(DatasetLoader):
             doc_embeds=embds,
             doc_index=range(len(chunks)),
             doc_name="register-rag",
-            store_name="register-rag-eval",
+            store_name=self.config.store_name,
         )
 
-    def load(self) -> Dict[str, List[Dict[str, str | List[str]]]]:
+    def load(self) -> Tuple[List[str], List[str], List[str]]:
         if self.config.insert:
             self.insert_data()
 
@@ -53,4 +53,13 @@ class OurDatasetLoader(DatasetLoader):
         with open(qas_path, "r") as f:
             qas = json.load(f)
 
-        return qas
+        query = []
+        ans = []
+        recall_ans = []
+
+        for qa in qas:
+            query.append(qa["query"])
+            ans.append(qa["response"].split("问题回答：")[-1])
+            recall_ans.append(qa["recall_content"].split("。"))
+
+        return query, ans, recall_ans

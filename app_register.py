@@ -105,7 +105,7 @@ class AppRegister:
             for i in range(len(query)):
                 recall_res = db.search_by_embed(
                     query_embed=query_embd[i],
-                    top_k=retrieve_top_k,
+                    k=retrieve_top_k,
                     store_name=store_name,
                 )
                 RagLogger().get_logger().info(
