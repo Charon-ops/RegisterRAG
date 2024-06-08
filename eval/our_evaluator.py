@@ -272,11 +272,11 @@ class OurEvaluator(Evaluator):
         revelance = 0.0
 
         for i in range(total_len):
-            ans = self.ans[i]
+            q = self.query[i]
             generate_res = self.generate_res[i]
-            ans_embedding = app.get_embedding(ans)
+            query_embedding = app.get_embedding(q)
             generate_res_embedding = app.get_embedding(generate_res)
-            dis = cosine(ans_embedding, generate_res_embedding)
+            dis = cosine(query_embedding, generate_res_embedding)
             revelance += 1 - dis
 
         return revelance / total_len

@@ -21,7 +21,12 @@ class TextExtractor(WebExtractor):
         extract_res = []
         for url in urls:
             # TODO: 适配需要JavaScript渲染的网页
-            response = requests.get(url)
+            try:
+                response = requests.get(url)
+            except Exception as e:
+                print(f"Error: {e}")
+                extract_res.append(Document(page_content=""))
+                continue
             if response.status_code == 200:
                 soup = BeautifulSoup(response.content, "html.parser")
                 extract_res.append(Document(page_content=soup.get_text()))
