@@ -29,7 +29,10 @@
         "websearch": [
             {
                 "name": "arxiv",
-                "args": {}
+                "args": {
+                    "baidu_app_id": "you_id",
+                    "secret_key": "your_secret_key"
+                }
             },
             {
                 "name": "baidu",

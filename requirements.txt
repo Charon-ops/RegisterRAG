@@ -7,3 +7,6 @@ langchain-community==0.2.1
 chardet==5.2.0
 brotli==1.1.0
 scipy==1.13.1
+spaCy==3.7.5
+datasketch==1.6.5
+pypdf==4.2.0

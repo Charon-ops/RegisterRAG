@@ -33,6 +33,9 @@ class PdfExtractor(WebExtractor):
             with open(pdf_path, "wb") as f:
                 f.write(response.content)
             loader = PyPDFLoader(pdf_path)
-            extract_res += loader.load()
+            load_res = loader.load()
+            # load_len = max(10, len(load_res))
+            # load_res = load_res[:load_len]
+            extract_res += load_res
             os.remove(pdf_path)
         return extract_res

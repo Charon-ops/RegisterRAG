@@ -40,12 +40,12 @@ def get_response_from_llm(get_response_params: GetResponseParams) -> str:
     RagLogger().get_logger().info(f"get_response_params: {get_response_params}")
     app = AppRegister(get_response_params.app_name)
     query_embded = app.get_embedding(get_response_params.query_content)
-    # web_contents = app.get_websearch_contents(get_response_params.query_content)
-    web_contents = []
+    web_contents = app.get_websearch_contents(get_response_params.query_content)
+    # web_contents = []
     logged_web_contents = [
-        web_content.page_content
+        web_content.page_content.strip()
         for web_content in web_contents
-        if web_content.page_content
+        if web_content.page_content.strip()
     ]
     RagLogger().get_logger().info(f"web_contents: {logged_web_contents}")
     repo_contents = app.recall([get_response_params.query_content], [query_embded])[0]
