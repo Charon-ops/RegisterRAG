@@ -25,6 +25,7 @@
 ## 🔔 Updates
 
 - 2024-05-26 We released the first version of the base RAG framework that can support configurations
+- 2024-06-11 We published the first [evaluation](https://github.com/Charon-ops/RegisterRAG/wiki/Evaluation-Report-(2024.06.11)) of the RAG framework.
 
 ## 🚀 Deploy
 
