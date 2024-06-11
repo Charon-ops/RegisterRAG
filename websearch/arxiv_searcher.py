@@ -109,7 +109,7 @@ class ArxivSearcher(WebSearcher):
         query_english = self.translate(query)
         keywords = self.extract_keywords(query_english)
         word_num = max(3, len(keywords))
-        query = "+AND+".join(keywords[:word_num])
+        query = " AND ".join(keywords[:word_num])
         search_res = WebSearchRes(query=query, source="arxiv", urls=[])
         sorter = arxiv.SortCriterion.Relevance
         searcher = arxiv.Search(query, max_results=max_res, sort_by=sorter)
