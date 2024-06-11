@@ -15,6 +15,7 @@ class QwenPlusResponseGen(ResponseGen):
         return
 
     def response_gen(self, prompt: str) -> str:
+        dashscope.api_key = self.api_key
         responses = dashscope.Generation.call(
             model="qwen-plus",
             messages=[{"role": "user", "content": prompt}],
