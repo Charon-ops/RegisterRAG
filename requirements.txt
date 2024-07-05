@@ -11,3 +11,4 @@ spaCy==3.7.5
 datasketch==1.6.5
 pypdf==4.2.0
 dashscope==1.19.2
+chromadb==0.5.3
