@@ -16,13 +16,19 @@ from .base import WebSearcher
 from entity.web_search_res import WebSearchRes
 from web_extract.base import WebExtractor
 from web_extract import PdfExtractor
+from response_gen import QwenPlusResponseGen
 
 
 class ArxivSearcher(WebSearcher):
     def __init__(
-        self, baidu_app_id: str | int, secret_key: str, max_threads: int = 10
+        self,
+        qwen_plus_api_key: str,
+        baidu_app_id: str,
+        secret_key: str,
+        max_threads: int = 10,
     ) -> None:
         super().__init__()
+        self.qwen_plus_api_key = qwen_plus_api_key
         self.baidu_app_id = baidu_app_id
         self.secret_key = secret_key
         self.max_threads = max_threads
@@ -107,9 +113,14 @@ class ArxivSearcher(WebSearcher):
         extractor: WebExtractor = PdfExtractor(),
     ) -> List[Document]:
         query_english = self.translate(query)
-        keywords = self.extract_keywords(query_english)
-        word_num = max(3, len(keywords))
-        query = " AND ".join(keywords[:word_num])
+        # keywords = self.extract_keywords(query_english)
+        # word_num = max(3, len(keywords))
+        # query = " AND ".join(keywords[:word_num])
+        response_gen = QwenPlusResponseGen(api_key=self.qwen_plus_api_key)
+        prompt = f"请你根据这个问题，给出一个可以直接进行检索的、英文的 arXiv 搜索关键词。你的回答应该只包含关键词，不要包含其他内容。问题：{query}"
+        query = response_gen.response_gen(prompt)
+        # print(f"Query: {query}")
+        # print(f"Query English: {query_english}")
         search_res = WebSearchRes(query=query, source="arxiv", urls=[])
         sorter = arxiv.SortCriterion.Relevance
         searcher = arxiv.Search(query, max_results=max_res, sort_by=sorter)
