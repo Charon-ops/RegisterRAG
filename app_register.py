@@ -18,10 +18,10 @@ from logger import RagLogger
 
 
 class AppRegister:
-    def __init__(self, app_name: str) -> None:
-        if not os.path.exists("app_register_config.json"):
+    def __init__(self, app_name: str, config_path: str) -> None:
+        if not os.path.exists(config_path):
             raise OSError("The config file doesn't exist")
-        with open("app_register_config.json", "r") as f:
+        with open(config_path, "r") as f:
             self.config = json.load(f)[app_name]
         self.database = [
             STORE[db_config["name"]](**db_config["args"])

@@ -11,3 +11,4 @@ class InsertDocParams(BaseModel):
     doc_name: str = None
     doc_id: int = None
     store_name: str = "store"
+    config_path: str = "app_register_config.json"

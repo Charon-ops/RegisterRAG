@@ -15,7 +15,7 @@ async def insert_doc_to_store(insert_doc_params: InsertDocParams) -> None:
         insert_doc_params.file_content = (
             await insert_doc_params.file_content.read()
         ).decode("utf-8")
-    app = AppRegister(insert_doc_params.app_name)
+    app = AppRegister(insert_doc_params.app_name, insert_doc_params.config_path)
     content = app.load_file(insert_doc_params.file_content)
     contents = app.split_content(content)
     RagLogger().get_logger().info(f"contents: {contents}")
@@ -38,7 +38,7 @@ async def insert_doc_to_store(insert_doc_params: InsertDocParams) -> None:
 @service.post("/getResponseFromLLM", summary="根据query获取语言模型回答")
 def get_response_from_llm(get_response_params: GetResponseParams) -> str:
     RagLogger().get_logger().info(f"get_response_params: {get_response_params}")
-    app = AppRegister(get_response_params.app_name)
+    app = AppRegister(get_response_params.app_name, get_response_params.config_path)
     query_embded = app.get_embedding(get_response_params.query_content)
     web_contents = app.get_websearch_contents(get_response_params.query_content)
     # web_contents = []

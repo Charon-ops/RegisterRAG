@@ -13,3 +13,5 @@ pypdf==4.2.0
 dashscope==1.19.2
 chromadb==0.5.3
 xinference-client==0.13.0
+pip install gradio
+
