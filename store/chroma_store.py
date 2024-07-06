@@ -3,8 +3,16 @@ import uuid
 
 import chromadb
 from langchain_core.documents import Document
+from xinference_client import RESTfulClient
 
 from .base import Store
+
+
+class ChromaStoreEmbeddingFunction(chromadb.EmbeddingFunction):
+    def __call__(self, input: chromadb.Documents) -> chromadb.Embeddings:
+        client = RESTfulClient("http://localhost:9997")
+        model = client.get_model("bge-m3")
+        return [item["embedding"] for item in model.create_embedding(input)["data"]]
 
 
 class ChromaStore(Store):
@@ -14,13 +22,16 @@ class ChromaStore(Store):
     def add_documents(
         self, documents: List[Document], collection_name: str = "default"
     ) -> None:
-        collection = self.client.get_or_create_collection(
-            name=collection_name, embedding_function=ChromaStoreEmbeddingFunction
-        )
+        try:
+            collection = self.client.get_collection(collection_name)
+        except ValueError:
+            collection = self.client.create_collection(
+                name=collection_name, embedding_function=ChromaStoreEmbeddingFunction()
+            )
         collection.add(
             documents=[d.page_content for d in documents],
             metadatas=[d.metadata for d in documents],
-            ids=[uuid.uudi4() for i in range(len(documents))],
+            ids=[str(uuid.uuid4()) for i in range(len(documents))],
         )
 
     def search_by_embed(
@@ -59,9 +70,3 @@ class ChromaStore(Store):
         except ValueError:
             return
         collection.delete(ids=doc_ids)
-
-
-class ChromaStoreEmbeddingFunction(chromadb.EmbeddingFunction):
-    def __call__(self, input: chromadb.Documents) -> chromadb.Embeddings:
-        embeddings = []  # TODO: Refactor config
-        return embeddings
