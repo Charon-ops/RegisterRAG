@@ -1,7 +1,0 @@
-llmlingua
-fastapi
-uvicorn
-torch
-torchvision 
-torchaudio
-huggingface_hub[cli]
