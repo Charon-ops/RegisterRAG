@@ -6,3 +6,5 @@ __pycache__/
 data/
 refresh_token
 tmp/
+chroma/
+*.sqlite3
