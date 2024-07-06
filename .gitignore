@@ -3,7 +3,7 @@ __pycache__/
 *.txt
 !requirements.txt
 *.log
-data/
+RegisterRag/**/data/
 refresh_token
 tmp/
 chroma/
