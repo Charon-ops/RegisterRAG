@@ -7,7 +7,7 @@ setup(
     description="Quickly configure the RAG framework to meet your needs via JSON",
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
-    author="123",
+    author="JLULLM",
     author_email="none",
     url="https://github.com/Charon-ops/RegisterRAG",
     install_requires=[
@@ -27,6 +27,8 @@ setup(
         "chromadb==0.5.3",
         "xinference-client==0.13.0",
         "gradio==4.37.2",
+        "transformers==4.42.3",
+        "sentence-transformers==3.0.1",
     ],
     classifiers=[
         "Development Status :: 3 - Alpha",
