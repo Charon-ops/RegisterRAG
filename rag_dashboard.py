@@ -1,60 +1,129 @@
+from typing import List
+
 import gradio as gr
-import os
-
-from langchain_core.documents import Document
-
-from app_register import AppRegister
 
 
-class RagDashboard:
-    def __init__(self) -> None:
-        pass
+selected_logs = []
+logs = []
 
-    def launch(self):
-        with gr.Blocks() as rag_blocks:
-            with gr.Tab("Data Processing"):
-                config_file_input1 = gr.File(label="Config File Path", type="filepath")
-                data_files_input = gr.Files(label="Data Path", type="filepath")
-                app_name1 = gr.Text(label="App Name")
-                process_button = gr.Button("Process Data")
-                process_output = gr.Textbox(label="Output")
-                process_button.click(
-                    self.process_data,
-                    inputs=[config_file_input1, data_files_input, app_name1],
-                    outputs=process_output,
-                )
 
-            with gr.Tab("Response Generation"):
-                config_file_input2 = gr.File(label="Config File Path", type="filepath")
-                query_input = gr.Textbox(label="Query")
-                app_name2 = gr.Text(label="App Name")
-                generate_button = gr.Button("Generate Response")
-                response_output = gr.Textbox(label="Response")
-                generate_button.click(
-                    self.get_response,
-                    inputs=[config_file_input2, query_input, app_name2],
-                    outputs=response_output,
-                )
+def check_valid_url(url: str) -> bool:
+    return url.strip().startswith("http")
 
-        rag_blocks.launch()
 
-    def process_data(self, config_path, data_paths, app_name) -> None:
-        app = AppRegister(app_name, config_path)
-        data = []
-        for file in os.walk(data_paths):
-            if os.path.isdir(file):
-                continue
-            with open(file, "r") as f:
-                data.append(f.read())
-        app.add_database(
-            [Document(page_content=d) for d in data], app.get_embeddings(data)
+def split_file(file_path: str) -> List[str]:
+    global selected_logs
+    global logs
+    selected_logs = []
+    logs = []
+    with open(file_path, "r") as f:
+        logs = f.readlines()
+    return logs
+
+
+def handle_select(index: List[int]):
+    print(f"index: {index}")
+
+
+def upload_docs(
+    embedding_model: str,
+    embedding_remote_url: str,
+    store: str,
+    store_remote_url: str,
+    upload_files: List[str],
+):
+    if not check_valid_url(embedding_remote_url) or not check_valid_url(
+        store_remote_url
+    ):
+        return "Invalid remote url"
+    print(f"upload_files: {upload_files}")
+    return "Process success!"
+
+
+def recall_docs(
+    embedding_model: str,
+    embedding_remote_url: str,
+    store: str,
+    store_remote_url: str,
+    upload_file: str,
+) -> List[str]:
+    if not check_valid_url(embedding_remote_url) or not check_valid_url(
+        store_remote_url
+    ):
+        return "Invalid remote url"
+    return ""
+
+
+def generate_reponse(
+    embedding_model: str,
+    embedding_remote_url: str,
+    store: str,
+    store_remote_url: str,
+    qwen_api_key: str,
+    upload_file: str,
+    query: str,
+) -> str:
+    if not check_valid_url(embedding_remote_url) or not check_valid_url(
+        store_remote_url
+    ):
+        return "Invalid remote url"
+    return ""
+
+
+with gr.Blocks() as app:
+    with gr.Tab("Upload"):
+        with gr.Row():
+            upload_embedding_dropdown = gr.Dropdown(
+                label="Embedding Model", choices=["bge", "bert"], value="bge"
+            )
+            upload_embedding_remote_url = gr.Textbox(label="Embedding remote url")
+
+            upload_store_dropdown = gr.Dropdown(
+                label="Store", choices=["Chroma"], value="Chroma"
+            )
+            upload_store_remote_url = gr.Textbox(label="Store remote url")
+
+            upload_button = gr.Button("Upload")
+
+        upload_files = gr.Files(label="Q&A Files")
+        upload_output = gr.Textbox(label="Upload Output")
+        upload_button.click(
+            fn=upload_docs,
+            inputs=[
+                upload_embedding_dropdown,
+                upload_embedding_remote_url,
+                upload_store_dropdown,
+                upload_store_remote_url,
+                upload_files,
+            ],
+            outputs=[upload_output],
         )
 
-    def get_response(self, config_path, query, app_name) -> str:
-        app = AppRegister(app_name, config_path)
-        response = app.get_response(query)
-        return response
+    with gr.Tab("Response"):
+        with gr.Row():
+            response_embedding_dropdown = gr.Dropdown(
+                label="Embedding Model", choices=["bge", "bert"], value="bge"
+            )
+            response_embedding_remote_url = gr.Textbox(label="Embedding remote url")
 
+            response_store_dropdown = gr.Dropdown(
+                label="Store", choices=["Chroma"], value="Chroma"
+            )
+            response_store_remote_url = gr.Textbox(label="Store remote url")
 
-dashboard = RagDashboard()
-dashboard.launch()
+            recall_button = gr.Button("Recall")
+
+        with gr.Row():
+            response_query = gr.Textbox(label="Query")
+            response_upload_file = gr.File(label="Upload File")
+
+        with gr.Row():
+            recall_res = gr.Textbox(label="Recall Result")
+
+        with gr.Row():
+            response_button = gr.Button("Response")
+            response_res = gr.Textbox(label="Response Result")
+
+        recall_button.click()
+
+app.launch()

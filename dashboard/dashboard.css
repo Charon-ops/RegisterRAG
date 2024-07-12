@@ -1,0 +1,41 @@
+.title-line {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+}
+
+.tab-line {
+  display: flex;
+  padding-left: 3%;
+  justify-content: start;
+  align-items: center;
+  gap: 0;
+}
+
+.button {
+  border: none;
+  color: black;
+  font-size: x-large;
+}
+
+.button:hover {
+  background-color: lightblue;
+  color: darkblue;
+  cursor: pointer;
+}
+
+.button:active {
+  background-color: lightblue;
+  color: darkblue;
+}
+
+.upload-container {
+  visibility: visible;
+  width: 94%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding-left: 3%;
+  gap: 2%
+}

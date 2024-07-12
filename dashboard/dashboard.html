@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <title>Register Rag Dashboard</title>
+  <link rel="stylesheet" href="dashboard.css">
+</head>
+
+<body>
+  <h1 class="title-line">
+    Register Rag Dashboard
+  </h1>
+  <span class="tab-line">
+    <span style="font-size:x-large; padding-right: 2%; user-select: none;">Choose tab:</span>
+    <button id="upload-tab" class="button">Upload</button>
+    <button id="response-tab" class="button">Response</button>
+  </span>
+  <h2 id="sub-title" style="padding-left: 3%">Upload</h2>
+  <di id="upload" class="upload-container">
+    <span>
+      <label>Embedding Model:</label>
+      <select id="upload-embedding-model" style="width: 100%;">
+        <option value="bge-m3">BGE-M3</option>
+      </select>
+    </span>
+    <span>
+      <label>Embeddng remote url:</label>
+      <input id="upload-embedding-remote-url" style="width: 100%">
+    </span>
+    <span>
+      <label>Store:</label>
+      <select id="upload-store" style="width: 100%;">
+        <option value="chroma">Chroma</option>
+      </select>
+    </span>
+    <span>
+      <label>Store remote url:</label>
+      <input id="upload-store-remote-url" style="width: 100%">
+    </span>
+    <span>
+      <label>Q&A file:</label>
+      <input id="upload-files" type="file" multiple="multiple" style="width: 100%">
+    </span>
+    <button id="upload-button">Upload</button>
+  </div>
+</body>
+
+<script src="dashboard.js"></script>
+
+</html>
