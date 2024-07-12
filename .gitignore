@@ -9,3 +9,4 @@ tmp/
 chroma/
 *.sqlite3
 *_old/
+data/
