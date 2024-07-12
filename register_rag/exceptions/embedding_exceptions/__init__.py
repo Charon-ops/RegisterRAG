@@ -1,1 +1,2 @@
 from .load_not_initialized_exception import LoadNotInitializedException
+from .weight_path_not_valid_exception import WeightPathNotValidException

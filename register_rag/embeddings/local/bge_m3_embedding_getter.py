@@ -1,9 +1,11 @@
 from typing import List
+import os
 
 from sentence_transformers import SentenceTransformer
 from torch import device
 
 from ...entity import Document
+from ...exceptions.embedding_exceptions import WeightPathNotValidException
 from .local_embedding_getter import LocalEmbeddingGetter
 
 
@@ -14,7 +16,8 @@ class BgeM3EmbeddingGetter(LocalEmbeddingGetter):
         pre_load: bool = False,
         device: device = device("cuda"),
     ) -> None:
-        """Initialize the BgeM3EmbeddingGetter class
+        """
+        Initialize the BgeM3EmbeddingGetter class
 
         Args:
             weight_path (str): the path to the model weights
@@ -31,6 +34,14 @@ class BgeM3EmbeddingGetter(LocalEmbeddingGetter):
         self.device = device
 
     async def load(self):
+        """
+        Load the model.
+
+        Raises:
+            WeightPathNotValidException: If the weight path is not a directory.
+        """
+        if not os.path.isdir(self.weight_path):
+            raise WeightPathNotValidException(self.__class__.__name__)
         self.model = SentenceTransformer(
             model_name_or_path=self.weight_path, device=self.device
         )
