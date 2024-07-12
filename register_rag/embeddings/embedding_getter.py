@@ -7,33 +7,42 @@ from ..exceptions.embedding_exceptions import LoadNotInitializedException
 
 
 class EmbeddingGetter(ABC):
-    """Base class for embedding getter.
+    """
+    Base Class: EmbeddingGetter
 
-    This class should be inherited by the class that will be used to get the embeddings.
+    Purpose:
+        This class serves as a base for deriving specific embedding getter classes used to 
+        retrieve embeddings for documents.
 
-    You can just call the get_embedding method to get the embeddings of the documents.
-    The documents should be a `list` of `register-rag.entity.Document`.
-    It will check if the model is finished correctly, and if not,
-    it will wait the load method to load the model or raise an exception.
+    Usage:
+        - Inherit this class and implement the necessary methods (`embedding` and `load`) 
+        to adapt to specific models.
+        - Call `get_embedding` with a list of `register-rag.entity.Document` 
+        to retrieve embeddings. This method ensures the model is loaded 
+        (either waits for `load` to complete or raises an exception if loading fails).
 
-    If you want to use a different embedding getter,
-    you can just inherit this class and implement the embedding and load method.
-    The load method shuold be `async` and the task
-    should be created in the `__init__` method.
+    Methods:
+        - `load`: Should be asynchronous (`async`). Initialize the loading task in the 
+        `__init__` method of the subclass.
+        - `embedding`: Define how embeddings are generated from documents.
+        - `pre_embedding`: Optional. Define any preprocessing needed before embeddings 
+        are generated. This method is called before `embedding`.
+        - `post_embedding`: Optional. Define any postprocessing after embeddings are 
+        generated. This method is called immediately after `embedding`, 
+        but note that `get_embedding` does not wait for its completion 
+        to allow faster response times.
 
-    If some pre embedding process is needed, you can implement the pre_embedding method.
-    It will be called before the embedding method.
+    Parameters:
+        - Pre and post embedding parameters should be passed as dictionaries. 
+        For example, to pass parameter `a` to the `pre_embedding` method, use:
 
-    If some after embedding process is needed, you can implement the after_embedding method.
-    It will be called after the embedding method. But it should be remembered that
-    the get_embedding method will not wait for this method to be completed.
+        ```python
+        await embedding_getter.get_embedding(docs, pre_args={"a": 1})
+        ```
 
-    The parameters of the pre_embedding and after_embedding should be passed as a dictionary.
-    For example, if you want to pass a parameter `a` to the pre_embedding method,
-    you should call the get_embedding method like this:
-    ```
-    await embedding_getter.get_embedding(docs, pre_args={"a": 1})
-    ```
+    Note:
+        If using a different embedding strategy, ensure to inherit from this class 
+        and implement or override the necessary methods as described above.
     """
 
     def __init__(self) -> None:
@@ -59,24 +68,33 @@ class EmbeddingGetter(ABC):
         Raises:
             NotImplementedError: If the method is not implemented in the sub class.
         """
-        assert (
-            self.load_task is not None,
-            LoadNotInitializedException(self.__class__.__name__),
-        )  # Make sure the load method is implemented correctly.
+        if self.load_task is None:
+            try:
+                self.load_task = asyncio.create_task(
+                    self.load()
+                )  # Create the load task if it is not created.
+            except NotImplementedError:
+                raise LoadNotInitializedException(
+                    self.__class__.__name__
+                )  # If the load method is not implemented, raise an exception.
 
         await self.load_task  # Wait for the load method to be completed.
 
         if self.after_embedding_task is not None:
-            await self.after_embedding_task  # Wait for the after embedding process to be completed.
+            # Wait for the after embedding process to be completed,
+            # because it is not awaited in the after_embedding method.
+            await self.after_embedding_task
 
         await self.pre_embedding(
             **(pre_args if pre_args is not None else {})
         )  # Do some pre embedding process if needed.
 
-        res = await self.embedding(docs)  # Get the embeddings of the documents.
+        # Get the embeddings of the documents.
+        res = await self.embedding(docs)
 
         self.after_embedding_task = asyncio.create_task(
-            self.after_embedding(**(after_args if after_args is not None else {}))
+            self.after_embedding(
+                **(after_args if after_args is not None else {}))
         )  # Do some post embedding process if needed, but don't wait for it.
 
         return res
@@ -87,7 +105,7 @@ class EmbeddingGetter(ABC):
         return
 
     @abstractmethod
-    async def embeddng(self, docs: List[Document]) -> List[List[float]]:
+    async def embedding(self, docs: List[Document]) -> List[List[float]]:
         """The logic to get the embeddings of the documents should be implemented in this method.
 
         Args:
@@ -104,7 +122,7 @@ class EmbeddingGetter(ABC):
         )
 
     @abstractmethod
-    async def after_embedding(self, **kwargs) -> None:
+    async def post_embedding(self, **kwargs) -> None:
         """A method to do some post embedding process. It should be implemented in the sub class if needed."""
         return
 
