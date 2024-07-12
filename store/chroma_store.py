@@ -22,8 +22,12 @@ class ChromaStore(Store):
     def add_documents(
         self, documents: List[Document], collection_name: str = "default"
     ) -> None:
+        if len(documents) == 0 or documents is None:
+            return
         try:
-            collection = self.client.get_collection(collection_name)
+            collection = self.client.get_collection(
+                collection_name, embedding_function=ChromaStoreEmbeddingFunction()
+            )
         except ValueError:
             collection = self.client.create_collection(
                 name=collection_name, embedding_function=ChromaStoreEmbeddingFunction()
