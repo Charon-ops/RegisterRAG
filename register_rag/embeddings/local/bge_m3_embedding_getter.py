@@ -10,6 +10,13 @@ from .local_embedding_getter import LocalEmbeddingGetter
 
 
 class BgeM3EmbeddingGetter(LocalEmbeddingGetter):
+    """
+    Class: BgeM3EmbeddingGetter
+
+    Purpose:
+        Retrieves embeddings for documents using the Bge-m3 model.
+    """
+
     def __init__(
         self,
         weight_path: str,
@@ -20,7 +27,8 @@ class BgeM3EmbeddingGetter(LocalEmbeddingGetter):
         Initialize the BgeM3EmbeddingGetter class
 
         Args:
-            weight_path (str): the path to the model weights
+            weight_path (str): the path to the model weights, or you can also use
+            the model name from huggingface.
 
             pre_load (bool, optional):  If True, the model will be loaded
             when the object is created. If False, the model will be loaded
@@ -47,6 +55,15 @@ class BgeM3EmbeddingGetter(LocalEmbeddingGetter):
         )
 
     async def embedding(self, docs: List[Document]) -> List[List[float]]:
+        """
+        Embedding method for Bge-m3.
+
+        Args:
+            docs (List[Document]): A list of documents to embed.
+
+        Returns:
+            List[List[float]]: A list of embeddings for each document.
+        """
         return self.model.encode(
             sentences=[doc.page_content for doc in docs], device=self.device
         )
