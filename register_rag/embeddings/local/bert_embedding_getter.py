@@ -3,7 +3,7 @@ from typing import List
 from transformers import BertModel, AutoTokenizer
 from torch import no_grad
 
-from ...entity import Document
+from ...documents import Document
 from .local_embedding_getter import LocalEmbeddingGetter
 
 

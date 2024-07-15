@@ -1,6 +1,6 @@
 # rag框架需要配置成一个常态化的service rag服务，通过http请求获取服务
 from fastapi import FastAPI
-from entity import InsertDocParams, GetResponseParams
+from documents import InsertDocParams, GetResponseParams
 from langchain_core.documents import Document
 from app_register import AppRegister
 

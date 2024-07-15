@@ -4,8 +4,9 @@ import os
 from sentence_transformers import SentenceTransformer
 from torch import device
 
-from ...entity import Document
+from .. import Document
 from ...exceptions.embedding_exceptions import WeightPathNotValidException
+
 from .local_embedding_getter import LocalEmbeddingGetter
 
 

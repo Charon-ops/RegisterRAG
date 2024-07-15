@@ -1,0 +1,2 @@
+from .bge_m3_embedding_getter import BgeM3EmbeddingGetter
+from .bert_embedding_getter import BertEmbeddingGetter

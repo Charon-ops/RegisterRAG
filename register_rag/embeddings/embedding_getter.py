@@ -2,7 +2,7 @@ import asyncio
 from abc import ABC, abstractmethod
 from typing import List, Dict, Any
 
-from ..entity import Document
+from . import Document
 from ..exceptions.embedding_exceptions import LoadNotInitializedException
 
 
@@ -11,29 +11,29 @@ class EmbeddingGetter(ABC):
     Base Class: EmbeddingGetter
 
     Purpose:
-        This class serves as a base for deriving specific embedding getter classes used to 
+        This class serves as a base for deriving specific embedding getter classes used to
         retrieve embeddings for documents.
 
     Usage:
-        - Inherit this class and implement the necessary methods (`embedding` and `load`) 
+        - Inherit this class and implement the necessary methods (`embedding` and `load`)
         to adapt to specific models.
-        - Call `get_embedding` with a list of `register-rag.entity.Document` 
-        to retrieve embeddings. This method ensures the model is loaded 
+        - Call `get_embedding` with a list of `register-rag.entity.Document`
+        to retrieve embeddings. This method ensures the model is loaded
         (either waits for `load` to complete or raises an exception if loading fails).
 
     Methods:
-        - `load`: Should be asynchronous (`async`). Initialize the loading task in the 
+        - `load`: Should be asynchronous (`async`). Initialize the loading task in the
         `__init__` method of the subclass.
         - `embedding`: Define how embeddings are generated from documents.
-        - `pre_embedding`: Optional. Define any preprocessing needed before embeddings 
+        - `pre_embedding`: Optional. Define any preprocessing needed before embeddings
         are generated. This method is called before `embedding`.
-        - `post_embedding`: Optional. Define any postprocessing after embeddings are 
-        generated. This method is called immediately after `embedding`, 
-        but note that `get_embedding` does not wait for its completion 
+        - `post_embedding`: Optional. Define any postprocessing after embeddings are
+        generated. This method is called immediately after `embedding`,
+        but note that `get_embedding` does not wait for its completion
         to allow faster response times.
 
     Parameters:
-        - Pre and post embedding parameters should be passed as dictionaries. 
+        - Pre and post embedding parameters should be passed as dictionaries.
         For example, to pass parameter `a` to the `pre_embedding` method, use:
 
         ```python
@@ -41,7 +41,7 @@ class EmbeddingGetter(ABC):
         ```
 
     Note:
-        If using a different embedding strategy, ensure to inherit from this class 
+        If using a different embedding strategy, ensure to inherit from this class
         and implement or override the necessary methods as described above.
     """
 
@@ -93,13 +93,11 @@ class EmbeddingGetter(ABC):
         res = await self.embedding(docs)
 
         self.after_embedding_task = asyncio.create_task(
-            self.after_embedding(
-                **(after_args if after_args is not None else {}))
+            self.post_embedding(**(after_args if after_args is not None else {}))
         )  # Do some post embedding process if needed, but don't wait for it.
 
         return res
 
-    @abstractmethod
     async def pre_embedding(self, **kwargs) -> None:
         """A method to do some pre embedding process. It should be implemented in the sub class if needed."""
         return
@@ -121,7 +119,6 @@ class EmbeddingGetter(ABC):
             "_get_embedding method is not implemented, it should be implemented in the sub class."
         )
 
-    @abstractmethod
     async def post_embedding(self, **kwargs) -> None:
         """A method to do some post embedding process. It should be implemented in the sub class if needed."""
         return
