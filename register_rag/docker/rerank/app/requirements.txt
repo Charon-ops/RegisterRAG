@@ -1,9 +1,0 @@
-fastapi
-uvicorn
-torch
-torchvision 
-torchaudio
-transformers
-huggingface_hub[cli]
-python-jose[cryptography]
-passlib[bcrypt]

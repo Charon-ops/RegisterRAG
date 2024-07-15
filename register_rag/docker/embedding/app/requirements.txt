@@ -1,6 +1,0 @@
-fastapi
-uvicorn
-sentence-transformers
-huggingface_hub[cli]
-python-jose[cryptography]
-passlib[bcrypt]

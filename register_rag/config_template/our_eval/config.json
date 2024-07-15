@@ -1,8 +1,0 @@
-{
-  "app_name": "wisdomentor",
-  "store_name": "wisdomentor",
-  "retrieve_top_k": 20,
-  "rerank_top_k": 10,
-  "data_path": "/home/yumuzhihan/Documents/Code/Project/RegisterRAG/data",
-  "save_path": "/home/yumuzhihan/Documents/Code/Project/RegisterRAG/data/res.json"
-}

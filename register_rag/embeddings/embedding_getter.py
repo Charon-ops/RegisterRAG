@@ -46,6 +46,7 @@ class EmbeddingGetter(ABC):
     """
 
     def __init__(self) -> None:
+        super().__init__()
         self.load_task: asyncio.Task = None
         self.after_embedding_task: asyncio.Task = None
 
