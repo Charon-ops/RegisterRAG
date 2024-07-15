@@ -8,6 +8,7 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 from response_gen import QwenPlusResponseGen
 from store.chroma_store import ChromaStore
+from loader import SqliteLoader
 
 
 selected_logs = []
@@ -79,8 +80,12 @@ def recall_docs(
         raise ValueError("Only support Chroma store")
     if not os.path.exists(upload_file):
         raise ValueError("Upload file not exists")
-    loader = TextLoader(upload_file)
-    logs = loader.load_and_split(text_splitter=RecursiveCharacterTextSplitter())
+    if upload_file.endswith(".txt"):
+        loader = TextLoader(upload_file)
+        logs = loader.load_and_split(text_splitter=RecursiveCharacterTextSplitter())
+    else:
+        loader = SqliteLoader(upload_file)
+        logs = loader.load_file()
     log_embeds = [get_embedding(log.page_content, embedding_remote_url) for log in logs]
     log_embed = [sum(x) / len(x) for x in zip(*log_embeds)]
     query_embed = get_embedding(query, embedding_remote_url)
