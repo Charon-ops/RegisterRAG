@@ -10,3 +10,6 @@ chroma/
 *.sqlite3
 *_old/
 data/
+build/
+dist/
+*.egg-info/
