@@ -29,6 +29,7 @@ setup(
         "gradio==4.37.2",
         "transformers==4.42.3",
         "sentence-transformers==3.0.1",
+        "chardet==5.2.0",
     ],
     classifiers=[
         "Development Status :: 3 - Alpha",
