@@ -11,7 +11,7 @@ def test_bge_m3_embedding_getter():
     """
     Test: BgeM3EmbeddingGetter
     """
-    weight_path = "/home/yumuzhihan/Documents/Code/Project/RegisterRAG/data/bge-m3"
+    weight_path = "BAAI/bge-m3"
     bge_m3_embedding_getter = BgeM3EmbeddingGetter(
         weight_path=weight_path, device="cpu"
     )

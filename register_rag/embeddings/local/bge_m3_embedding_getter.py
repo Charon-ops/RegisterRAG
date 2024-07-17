@@ -50,7 +50,8 @@ class BgeM3EmbeddingGetter(LocalEmbeddingGetter):
             WeightPathNotValidException: If the weight path is not a directory.
         """
         if not os.path.isdir(self.weight_path):
-            raise WeightPathNotValidException(self.__class__.__name__)
+            if "/" not in self.weight_path:
+                raise WeightPathNotValidException(self.__class__.__name__)
         self.model = SentenceTransformer(
             model_name_or_path=self.weight_path, device=self.device
         )
