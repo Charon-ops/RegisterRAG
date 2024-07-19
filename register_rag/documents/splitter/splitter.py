@@ -22,7 +22,7 @@ class Splitter(ABC):
         super().__init__()
 
     @abstractmethod
-    async def split(self, doc: Document) -> List[Document]:
+    async def split(self, doc: Document, **kargs) -> List[Document]:
         """
         Split a document into multiple documents.
 

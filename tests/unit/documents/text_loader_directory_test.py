@@ -17,7 +17,10 @@ def test_text_loader_directory():
 
     res = asyncio.run(loader.load())
 
-    assert len(res) == 2
+    file_list = os.listdir(os.path.dirname(__file__))
+    file_list = [f for f in file_list if f.endswith(".py")]
+
+    assert len(res) == len(file_list)
 
     for r in res:
         with open(r.metadata["src"], "r", encoding="UTF-8") as f:

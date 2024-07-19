@@ -29,9 +29,6 @@ class TextLoader(Loader):
             )
             ```
         """
-        assert os.path.isfile(file_path), f"File {file_path} does not exist."
-        # if the function is called correctly, the file should exist, and it
-        # should be a file
 
         with open(f"{file_path}", "rb") as f:
             # detect the encoding of the file
