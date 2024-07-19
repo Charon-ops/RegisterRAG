@@ -7,7 +7,7 @@ from langchain_community.document_loaders import PyPDFLoader, TextLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 from response_gen import QwenPlusResponseGen
-from store.chroma_store import ChromaStore
+from store import ChromaStore
 from loader import SqliteLoader
 
 
@@ -19,14 +19,11 @@ def check_valid_url(url: str) -> bool:
     return url.strip().startswith("http")
 
 
-def split_file(file_path: str) -> List[str]:
-    global selected_logs
-    global logs
-    selected_logs = []
-    logs = []
-    with open(file_path, "r") as f:
-        logs = f.readlines()
-    return logs
+def convert_path(path: str) -> str:
+    if not path.startswith("/"):
+        return os.path.join(os.path.dirname(__file__), path)
+    else:
+        return path
 
 
 def get_embedding(text: str, remote_url: str) -> List[float]:
@@ -45,6 +42,7 @@ def upload_docs(
     embedding_remote_url: str,
     store: str,
     store_path: str,
+    collection_name: str,
     upload_files: List[str],
 ):
     if not check_valid_url(embedding_remote_url):
@@ -53,13 +51,15 @@ def upload_docs(
         return ValueError("Only support bge model")
     if store != "Chroma":
         return ValueError("Only support Chroma store")
+    store_path = convert_path(store_path)
     for file in upload_files:
         loader = PyPDFLoader(file)
         contents = loader.load_and_split(text_splitter=RecursiveCharacterTextSplitter())
         chromaStore = ChromaStore(os.path.join(os.path.dirname(__file__), store_path))
         chromaStore.add_documents(
             documents=contents,
-            collection_name="test",
+            embedding_remote_url=embedding_remote_url,
+            collection_name=collection_name,
         )
     return "Process success!"
 
@@ -70,6 +70,7 @@ def recall_docs(
     store: str,
     store_path: str,
     query: str,
+    collection_name: str,
     upload_file: str,
 ) -> str:
     if not check_valid_url(embedding_remote_url):
@@ -80,6 +81,7 @@ def recall_docs(
         raise ValueError("Only support Chroma store")
     if not os.path.exists(upload_file):
         raise ValueError("Upload file not exists")
+    store_path = convert_path(store_path)
     if upload_file.endswith(".txt"):
         loader = TextLoader(upload_file)
         logs = loader.load_and_split(text_splitter=RecursiveCharacterTextSplitter())
@@ -92,7 +94,9 @@ def recall_docs(
     for i in range(len(query_embed)):
         query_embed[i] = (query_embed[i] + log_embed[i]) / 2
     chromaStore = ChromaStore(os.path.join(os.path.dirname(__file__), store_path))
-    res = chromaStore.search_by_embed(query_embed, collction_name="test", results=5)
+    res = chromaStore.search_by_embed(
+        query_embed, collction_name=collection_name, results=5
+    )
     return "\n".join(res[0])
 
 
@@ -119,6 +123,8 @@ with gr.Blocks() as app:
             )
             upload_store_db_path = gr.Textbox(label="Store db path")
 
+            upload_collection_name = gr.Textbox(label="Collection Name")
+
             upload_button = gr.Button("Upload")
 
         upload_files = gr.Files(label="Q&A Files")
@@ -130,6 +136,7 @@ with gr.Blocks() as app:
                 upload_embedding_remote_url,
                 upload_store_dropdown,
                 upload_store_db_path,
+                upload_collection_name,
                 upload_files,
             ],
             outputs=[upload_output],
@@ -146,6 +153,8 @@ with gr.Blocks() as app:
                 label="Store", choices=["Chroma"], value="Chroma"
             )
             response_store_db_path = gr.Textbox(label="Store db path")
+
+            response_collection_name = gr.Textbox(label="Collection Name")
 
             recall_button = gr.Button("Recall")
 
@@ -170,6 +179,7 @@ with gr.Blocks() as app:
                 response_store_dropdown,
                 response_store_db_path,
                 response_query,
+                response_collection_name,
                 response_upload_file,
             ],
             outputs=[recall_res],

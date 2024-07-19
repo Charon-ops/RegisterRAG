@@ -9,8 +9,12 @@ from .base import Store
 
 
 class ChromaStoreEmbeddingFunction(chromadb.EmbeddingFunction):
+    def __init__(self, url: str) -> None:
+        super().__init__()
+        self.url = url
+
     def __call__(self, input: chromadb.Documents) -> chromadb.Embeddings:
-        client = RESTfulClient("http://localhost:9997")
+        client = RESTfulClient(self.url)
         model = client.get_model("bge-m3")
         return [item["embedding"] for item in model.create_embedding(input)["data"]]
 
@@ -20,17 +24,22 @@ class ChromaStore(Store):
         self.client = chromadb.PersistentClient(db_path)
 
     def add_documents(
-        self, documents: List[Document], collection_name: str = "default"
+        self,
+        documents: List[Document],
+        embedding_remote_url: str,
+        collection_name: str = "default",
     ) -> None:
         if len(documents) == 0 or documents is None:
             return
         try:
             collection = self.client.get_collection(
-                collection_name, embedding_function=ChromaStoreEmbeddingFunction()
+                collection_name,
+                embedding_function=ChromaStoreEmbeddingFunction(embedding_remote_url),
             )
         except ValueError:
             collection = self.client.create_collection(
-                name=collection_name, embedding_function=ChromaStoreEmbeddingFunction()
+                name=collection_name,
+                embedding_function=ChromaStoreEmbeddingFunction(embedding_remote_url),
             )
         collection.add(
             documents=[d.page_content for d in documents],
