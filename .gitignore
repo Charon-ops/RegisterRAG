@@ -3,12 +3,6 @@ __pycache__/
 *.txt
 !requirements.txt
 *.log
-RegisterRag/**/data/
-refresh_token
-tmp/
-chroma/
-*.sqlite3
-*_old/
 data/
 build/
 dist/
