@@ -53,8 +53,19 @@ def upload_docs(
         return ValueError("Only support Chroma store")
     store_path = convert_path(store_path)
     for file in upload_files:
-        loader = PyPDFLoader(file)
-        contents = loader.load_and_split(text_splitter=RecursiveCharacterTextSplitter())
+        if file.endswith("pdf"):
+            loader = PyPDFLoader(file)
+            contents = loader.load_and_split(
+                text_splitter=RecursiveCharacterTextSplitter()
+            )
+        elif file.endswith("txt"):
+            loader = TextLoader(file)
+            contents = loader.load_and_split(
+                text_splitter=RecursiveCharacterTextSplitter()
+            )
+        else:
+            loader = SqliteLoader(file)
+            contents = loader.load_file()
         chromaStore = ChromaStore(os.path.join(os.path.dirname(__file__), store_path))
         chromaStore.add_documents(
             documents=contents,
@@ -72,6 +83,7 @@ def recall_docs(
     query: str,
     collection_name: str,
     upload_file: str,
+    top_k: int = 5,
 ) -> str:
     if not check_valid_url(embedding_remote_url):
         return "Invalid remote url"
@@ -90,14 +102,18 @@ def recall_docs(
         logs = loader.load_file()
     log_embeds = [get_embedding(log.page_content, embedding_remote_url) for log in logs]
     log_embed = [sum(x) / len(x) for x in zip(*log_embeds)]
-    query_embed = get_embedding(query, embedding_remote_url)
-    for i in range(len(query_embed)):
-        query_embed[i] = (query_embed[i] + log_embed[i]) / 2
+    # query_embed = get_embedding(query, embedding_remote_url)
+    # for i in range(len(query_embed)):
+    #     query_embed[i] = (query_embed[i] + log_embed[i]) / 2
     chromaStore = ChromaStore(os.path.join(os.path.dirname(__file__), store_path))
     res = chromaStore.search_by_embed(
-        query_embed, collction_name=collection_name, results=5
+        log_embed, collction_name=collection_name, results=top_k
     )
-    return "\n".join(res[0])
+    metadatas = res["metadatas"][0]
+    res_str = ""
+    for metadata in metadatas:
+        res_str += metadata["source"] + "\n"
+    return res_str
 
 
 def generate_reponse(
@@ -159,13 +175,13 @@ with gr.Blocks() as app:
             recall_button = gr.Button("Recall")
 
         with gr.Row():
-            response_query = gr.Textbox(label="Query")
             response_upload_file = gr.File(label="Upload File")
 
         with gr.Row():
             recall_res = gr.Textbox(label="Recall Result")
 
         with gr.Row():
+            response_query = gr.Textbox(label="Query")
             qwen_plus_api_key = gr.Textbox(label="Qwen Plus API Key")
             response_button = gr.Button("Response")
 
@@ -191,4 +207,5 @@ with gr.Blocks() as app:
             outputs=[response_res],
         )
 
-app.launch()
+if __name__ == "__main__":
+    app.launch()

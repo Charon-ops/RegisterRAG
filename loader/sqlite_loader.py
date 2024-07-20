@@ -39,7 +39,10 @@ class SqliteLoader(Loader):
                 documents.append(
                     Document(
                         page_content=formatted_string,
-                        metadata={"source": f"{self.db_path}::{table_name}"},
+                        metadata={
+                            "source": f"{self.db_path}",
+                            "table": f"{table_name}",
+                        },
                     )
                 )
 

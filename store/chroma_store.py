@@ -2,6 +2,7 @@ from typing import List
 import uuid
 
 import chromadb
+from chromadb import QueryResult
 from langchain_core.documents import Document
 from xinference_client import RESTfulClient
 
@@ -52,14 +53,12 @@ class ChromaStore(Store):
         query_embed: List[List[float]],
         collction_name: str = "default",
         results: int = 10,
-    ) -> List[Document]:
+    ) -> QueryResult:
         try:
             collection = self.client.get_collection(name=collction_name)
         except ValueError:
             return []
-        return collection.query(query_embeddings=query_embed, n_results=results)[
-            "documents"
-        ]
+        return collection.query(query_embeddings=query_embed, n_results=results)
 
     def get_id_by_docs(
         self, docs: List[Document], collection_name: str = "default"
