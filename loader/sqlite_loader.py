@@ -1,6 +1,7 @@
 from typing import List
 import os
 import sqlite3
+import uuid
 
 from langchain_core.documents import Document
 
@@ -12,6 +13,7 @@ class SqliteLoader(Loader):
         if db_path is None or not os.path.isfile(db_path):
             raise ValueError("Invalid weight path provided")
         self.db_path = db_path
+        self.group_id = str(uuid.uuid4())
 
     def load_file(self) -> List[Document]:
         conn = sqlite3.connect(self.db_path)
@@ -42,6 +44,7 @@ class SqliteLoader(Loader):
                         metadata={
                             "source": f"{self.db_path}",
                             "table": f"{table_name}",
+                            "group_id": f"{self.group_id}",
                         },
                     )
                 )

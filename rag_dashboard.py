@@ -52,6 +52,7 @@ def upload_docs(
     if store != "Chroma":
         return ValueError("Only support Chroma store")
     store_path = convert_path(store_path)
+    from_sql = False
     for file in upload_files:
         if file.endswith("pdf"):
             loader = PyPDFLoader(file)
@@ -64,6 +65,7 @@ def upload_docs(
                 text_splitter=RecursiveCharacterTextSplitter()
             )
         else:
+            from_sql = True
             loader = SqliteLoader(file)
             contents = loader.load_file()
         chromaStore = ChromaStore(os.path.join(os.path.dirname(__file__), store_path))
@@ -71,6 +73,7 @@ def upload_docs(
             documents=contents,
             embedding_remote_url=embedding_remote_url,
             collection_name=collection_name,
+            from_sql=from_sql,
         )
     return "Process success!"
 

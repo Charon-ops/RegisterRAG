@@ -29,6 +29,7 @@ class ChromaStore(Store):
         documents: List[Document],
         embedding_remote_url: str,
         collection_name: str = "default",
+        from_sql: bool = False,
     ) -> None:
         if len(documents) == 0 or documents is None:
             return
@@ -42,11 +43,25 @@ class ChromaStore(Store):
                 name=collection_name,
                 embedding_function=ChromaStoreEmbeddingFunction(embedding_remote_url),
             )
-        collection.add(
-            documents=[d.page_content for d in documents],
-            metadatas=[d.metadata for d in documents],
-            ids=[str(uuid.uuid4()) for i in range(len(documents))],
-        )
+        if not from_sql:
+            collection.add(
+                documents=[d.page_content for d in documents],
+                metadatas=[d.metadata for d in documents],
+                ids=[str(uuid.uuid4()) for i in range(len(documents))],
+            )
+        else:
+            embedding_funtion = ChromaStoreEmbeddingFunction(embedding_remote_url)
+            embeddings = embedding_funtion([d.page_content for d in documents])
+            embedding = [sum(x) / len(x) for x in zip(*embeddings)]
+            content = ""
+            for doc in documents:
+                content += doc.page_content + "\n"
+            collection.add(
+                documents=[content],
+                embeddings=[embedding],
+                metadatas=[documents[0].metadata],
+                ids=[str(uuid.uuid4())],
+            )
 
     def search_by_embed(
         self,
