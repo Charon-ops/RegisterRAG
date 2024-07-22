@@ -8,6 +8,14 @@ from .. import Generator
 
 
 class LocalGenerator(Generator):
+    """
+    Local generator base class.
+
+    The model_path is required for the local generator. If pre_load is set to True,
+    the model will be loaded when the generator is created. Otherwise, the model will
+    be loaded when the generate method is called for the first time.
+    """
+
     def __init__(self, model_path: str, pre_load: bool = False) -> None:
         super().__init__()
         self.model_path = model_path
@@ -30,6 +38,12 @@ class LocalGenerator(Generator):
 
     @abstractmethod
     async def load(self) -> None:
+        """
+        Load the model.
+
+        Raises:
+            NotImplementedError: This method should be implemented by the subclass.
+        """
         raise NotImplementedError(
             "The load method must be implemented by the subclass."
         )

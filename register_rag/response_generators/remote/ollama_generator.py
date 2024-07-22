@@ -4,6 +4,15 @@ from .remote_generator import RemoteGenerator
 
 
 class OllamaGenerator(RemoteGenerator):
+    """
+    Ollama generator class.
+
+    The Ollama generator uses the Ollama library to generate responses. You should
+    run `ollama serve` to start the Ollama server before using this generator. The
+    `ollama` library for Python is also required. You can install it using
+    `pip install ollama`.
+    """
+
     def __init__(self, model_name: str) -> None:
         super().__init__(model_name)
 
