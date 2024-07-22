@@ -3,7 +3,8 @@ import asyncio
 
 sys.path.append(f"{sys.path[0]}/../../..")
 
-from register_rag.response_generators import OllamaGenerator, ResponseMessage
+from register_rag.response_generators import ResponseMessage
+from register_rag.response_generators.remote import OllamaGenerator
 
 
 def test_ollama_generator():

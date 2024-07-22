@@ -1,6 +1,7 @@
+from typing import Literal
 from pydantic import BaseModel
 
 
 class ResponseMessage(BaseModel):
     message: str
-    role: str
+    role: Literal["system", "user", "assistant"]

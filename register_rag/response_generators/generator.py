@@ -38,3 +38,31 @@ class Generator(ABC):
         raise NotImplementedError(
             "The generate method must be implemented by the subclass."
         )
+
+    async def message_merge(
+        self,
+        prompt: str,
+        history_messages: List[ResponseMessage],
+        system_prompt: str,
+    ) -> List[ResponseMessage]:
+        """
+        Merge the prompt with the history messages.
+
+        Args:
+            prompt (str): The prompt for which the response should be generated.
+            history_messages (List[ResponseMessage]): The history of messages in the
+            conversation. Should contain message and role for each message.
+
+        Returns:
+            List[ResponseMessage]: The merged messages.
+        """
+        messages = []
+        if system_prompt is not None:
+            messages.append(ResponseMessage(message=system_prompt, role="system"))
+        if history_messages is not None:
+            for message in history_messages:
+                messages.append(
+                    ResponseMessage(message=message.message, role=message.role)
+                )
+        messages.append(ResponseMessage(message=prompt, role="user"))
+        return messages

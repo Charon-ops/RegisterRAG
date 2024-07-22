@@ -1,12 +1,11 @@
 from typing import List
-from register_rag.response_generators.response_message import ResponseMessage
-from .generator import Generator
+from .. import ResponseMessage
+from .remote_generator import RemoteGenerator
 
 
-class OllamaGenerator(Generator):
+class OllamaGenerator(RemoteGenerator):
     def __init__(self, model_name: str) -> None:
-        super().__init__()
-        self.model_name = model_name
+        super().__init__(model_name)
 
     async def generate(
         self,
@@ -21,15 +20,7 @@ class OllamaGenerator(Generator):
                 "The Ollama library is not installed. Please install it using `pip install ollama`."
             )
 
-        messages = []
-        if system_prompt is not None:
-            messages.append({"role": "system", "message": system_prompt})
-
-        if history_messages:
-            for message in history_messages:
-                messages.append({"role": message.role, "message": message.message})
-
-        messages.append({"role": "user", "message": prompt})
+        messages = await self.message_merge(prompt, history_messages, system_prompt)
 
         response = ollama.chat(
             model=self.model_name,
