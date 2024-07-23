@@ -4,4 +4,4 @@ from pydantic import BaseModel
 
 class Document(BaseModel):
     page_content: str
-    metadata: Dict[str, Any] = {}
+    metadata: Dict[str, Any] | None = None
