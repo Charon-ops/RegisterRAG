@@ -20,7 +20,10 @@ class Generator(ABC):
 
     @abstractmethod
     async def generate(
-        self, prompt: str, history_messages: List[ResponseMessage] = None
+        self,
+        prompt: str,
+        history_messages: List[ResponseMessage] = None,
+        system_prompt: str = None,
     ) -> str:
         """
         Generate a response based on the prompt and history messages.

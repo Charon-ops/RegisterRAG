@@ -1,0 +1,1 @@
+from .xinference_embedding_getter import XinferenceEmbeddingGetter

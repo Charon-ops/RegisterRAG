@@ -20,10 +20,17 @@ class RemoteGenerator(Generator):
         super().__init__(config)
         if self.config.generation.generation_model_name_or_path is None:
             raise ValueError("Model name is required for remote generators.")
+        if self.config.generation.generation_remote_url is None:
+            raise ValueError("Remote URL is required for remote generators.")
         self.model_name = self.config.generation.generation_model_name_or_path
+        self.remote_url = self.config.generation.generation_remote_url
+        self.token = self.config.generation.generation_remote_token
 
     async def generate(
-        self, prompt: str, history_messages: List[ResponseMessage] = None
+        self,
+        prompt: str,
+        history_messages: List[ResponseMessage] = None,
+        system_prompt: str = None,
     ) -> str:
         raise NotImplementedError(
             "The generate method must be implemented by the subclass."
