@@ -1,7 +1,8 @@
 from abc import abstractmethod
 from typing import List
 
-from register_rag.response_generators.response_message import ResponseMessage
+from ...config import Config
+from ..response_message import ResponseMessage
 
 from .. import Generator
 
@@ -15,9 +16,11 @@ class RemoteGenerator(Generator):
     The generate method should be implemented by the subclass.
     """
 
-    def __init__(self, model_name: str) -> None:
-        super().__init__()
-        self.model_name = model_name
+    def __init__(self, config: Config) -> None:
+        super().__init__(config)
+        if self.config.generation.generation_model_name_or_path is None:
+            raise ValueError("Model name is required for remote generators.")
+        self.model_name = self.config.generation.generation_model_name_or_path
 
     async def generate(
         self, prompt: str, history_messages: List[ResponseMessage] = None

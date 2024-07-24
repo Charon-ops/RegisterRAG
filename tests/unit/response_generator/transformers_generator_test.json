@@ -1,0 +1,13 @@
+{
+  "embedding": {
+    "embedding_type": "local"
+  },
+  "store": {
+    "store_type": "local"
+  },
+  "generation": {
+    "generation_type": "local",
+    "generation_model_name_or_path": "transformers/Qwen/Qwen2-0.5B",
+    "device": "cuda"
+  }
+}

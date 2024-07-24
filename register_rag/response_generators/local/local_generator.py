@@ -2,7 +2,8 @@ from abc import abstractmethod
 import asyncio
 from typing import List
 
-from register_rag.response_generators.response_message import ResponseMessage
+from ...config import Config
+from ..response_message import ResponseMessage
 
 from .. import Generator
 
@@ -16,10 +17,13 @@ class LocalGenerator(Generator):
     be loaded when the generate method is called for the first time.
     """
 
-    def __init__(self, model_path: str, pre_load: bool = False) -> None:
-        super().__init__()
-        self.model_path = model_path
-        self.pre_load = pre_load
+    def __init__(self, config: Config) -> None:
+        super().__init__(config)
+        if self.config.generation.generation_model_name_or_path is None:
+            raise ValueError("Model name or path is required.")
+        self.model_path = self.config.generation.generation_model_name_or_path
+        self.pre_load = self.config.generation.generation_model_preload
+        self.device = self.config.generation.generation_model_device
         self.load_task: asyncio.Task = None
         self.model = None
         if self.pre_load:

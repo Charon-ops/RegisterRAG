@@ -4,16 +4,15 @@ import os
 
 sys.path.append(f"{sys.path[0]}/../../..")
 
+from register_rag.config import Config
 from register_rag.documents import Document
 from register_rag.store.local import ChromaStore
 from register_rag.config.store_config import StoreConfig
 
 
 def test_chroma_store():
-    config = StoreConfig(
-        store_name="chroma",
-        store_local_path=os.path.join(os.path.dirname(__file__), "data"),
-    )
+    config_path = os.path.join(os.path.dirname(__file__), "chroma_store_test.json")
+    config = Config.load(config_path)
     docs = [
         Document(page_content="This is a test document.", metadata={"source": "test"}),
         Document(

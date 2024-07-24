@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from typing import Dict, Any, List
 import asyncio
 
+from ..config import Config
 from .response_message import ResponseMessage
 
 
@@ -13,9 +14,9 @@ class Generator(ABC):
     generate a response. It should be implemented by the subclass.
     """
 
-    def __init__(self) -> None:
+    def __init__(self, config: Config) -> None:
         super().__init__()
-        self.load_task: asyncio.Task = None
+        self.config = config
 
     @abstractmethod
     async def generate(
@@ -58,11 +59,11 @@ class Generator(ABC):
         """
         messages = []
         if system_prompt is not None:
-            messages.append(ResponseMessage(message=system_prompt, role="system"))
+            messages.append(ResponseMessage(content=system_prompt, role="system"))
         if history_messages is not None:
             for message in history_messages:
                 messages.append(
-                    ResponseMessage(message=message.message, role=message.role)
+                    ResponseMessage(content=message["content"], role=message["role"])
                 )
-        messages.append(ResponseMessage(message=prompt, role="user"))
+        messages.append(ResponseMessage(content=prompt, role="user"))
         return messages

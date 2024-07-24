@@ -1,0 +1,12 @@
+{
+  "embedding": {
+    "embedding_type": "local",
+    "embedding_model_name_or_path": "BAAI/bge-m3"
+  },
+  "store": {
+    "store_type": "local"
+  },
+  "generation": {
+    "generation_type": "local"
+  }
+}

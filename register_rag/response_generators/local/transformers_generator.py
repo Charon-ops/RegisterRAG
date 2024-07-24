@@ -4,6 +4,7 @@ from typing import List, Dict
 from transformers import pipeline
 import torch
 
+from ...config import Config
 from .. import ResponseMessage
 from .local_generator import LocalGenerator
 
@@ -15,8 +16,9 @@ class TransformersGenerator(LocalGenerator):
     The generator will use GPU if available.
     """
 
-    def __init__(self, model_path: str, pre_load: bool = False) -> None:
-        super().__init__(model_path, pre_load)
+    def __init__(self, config: Config) -> None:
+        super().__init__(config)
+        self.model_path = "/".join(self.model_path.split("/")[1:])
 
     async def load(self) -> None:
         """
@@ -31,22 +33,6 @@ class TransformersGenerator(LocalGenerator):
             tokenizer=self.model_path,
             device=device,
         )
-
-    async def convert_messages_to_model_input(
-        self, messages: List[ResponseMessage]
-    ) -> List[Dict[str, str]]:
-        """
-        Convert the messages to the format expected by the model.
-
-        Args:
-            messages (List[ResponseMessage]): The messages to convert.
-
-        Returns:
-            List[Dict[str, str]]: The converted messages.
-        """
-        return [
-            {"role": message.role, "content": message.message} for message in messages
-        ]
 
     async def generate(
         self,
@@ -71,6 +57,5 @@ class TransformersGenerator(LocalGenerator):
             self.load_task = asyncio.create_task(self.load())
         await self.load_task
         messages = await self.message_merge(prompt, history_messages, system_prompt)
-        messages = await self.convert_messages_to_model_input(messages)
         response = self.model(messages)
         return response[0]["generated_text"][-1]["content"]

@@ -1,13 +1,14 @@
 from typing import List
+import os
 import uuid
 
-from ...config.store_config import StoreConfig
+from ...config import Config
 from ...documents import Document
 from .local_store import LocalStore
 
 
 class ChromaStore(LocalStore):
-    def __init__(self, config: StoreConfig) -> None:
+    def __init__(self, config: Config) -> None:
         super().__init__(config)
         try:
             import chromadb
@@ -16,7 +17,9 @@ class ChromaStore(LocalStore):
                 "ChromaStore requires `chromadb`"
                 "You can install it with `pip install chromadb`"
             )
-        self.client = chromadb.PersistentClient(config.store_local_path)
+        if not os.path.exists(config.store.store_local_path):
+            os.makedirs(config.store.store_local_path)
+        self.client = chromadb.PersistentClient(config.store.store_local_path)
 
     async def add_document(
         self,

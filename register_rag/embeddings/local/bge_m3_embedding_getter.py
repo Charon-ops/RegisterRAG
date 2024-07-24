@@ -4,7 +4,8 @@ import os
 from sentence_transformers import SentenceTransformer
 from torch import device
 
-from .. import Document
+from ...config import Config
+from ...documents import Document
 from ...exceptions.embedding_exceptions import WeightPathNotValidException
 
 from .local_embedding_getter import LocalEmbeddingGetter
@@ -18,12 +19,7 @@ class BgeM3EmbeddingGetter(LocalEmbeddingGetter):
         Retrieves embeddings for documents using the Bge-m3 model.
     """
 
-    def __init__(
-        self,
-        weight_path: str,
-        pre_load: bool = False,
-        device: device = device("cuda"),
-    ) -> None:
+    def __init__(self, config: Config) -> None:
         """
         Initialize the BgeM3EmbeddingGetter class
 
@@ -38,9 +34,7 @@ class BgeM3EmbeddingGetter(LocalEmbeddingGetter):
             device (device, optional): The device to use for the model.
             Defaults to device("cuda").
         """
-        super().__init__(weight_path, pre_load)
-
-        self.device = device
+        super().__init__(config)
 
     async def load(self):
         """

@@ -1,8 +1,7 @@
-from typing import Literal
-from pydantic import BaseModel
+from typing import Literal, TypedDict
 
 
-class ResponseMessage(BaseModel):
+class ResponseMessage(TypedDict):
     """
     The message and role of a response.
 
@@ -10,5 +9,5 @@ class ResponseMessage(BaseModel):
     is the actual text of the message
     """
 
-    message: str
+    content: str
     role: Literal["system", "user", "assistant"]

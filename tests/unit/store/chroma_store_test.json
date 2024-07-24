@@ -1,0 +1,13 @@
+{
+  "embedding": {
+    "embedding_type": "local"
+  },
+  "store": {
+    "store_type": "local",
+    "store_name": "chroma",
+    "store_local_path": "/home/yumuzhihan/Documents/Code/Project/RegisterRAG/tests/unit/store/data"
+  },
+  "generation": {
+    "generation_type": "local"
+  }
+}

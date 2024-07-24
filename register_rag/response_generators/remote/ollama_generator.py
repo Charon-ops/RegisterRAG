@@ -1,5 +1,7 @@
-from typing import List
-from .. import ResponseMessage
+from typing import List, TypedDict, Literal
+
+from ...config import Config
+from ..response_message import ResponseMessage
 from .remote_generator import RemoteGenerator
 
 
@@ -13,8 +15,9 @@ class OllamaGenerator(RemoteGenerator):
     `pip install ollama`.
     """
 
-    def __init__(self, model_name: str) -> None:
-        super().__init__(model_name)
+    def __init__(self, config: Config) -> None:
+        super().__init__(config)
+        self.model_name = "/".join(self.model_name.split("/")[1:])
 
     async def generate(
         self,
@@ -31,9 +34,6 @@ class OllamaGenerator(RemoteGenerator):
 
         messages = await self.message_merge(prompt, history_messages, system_prompt)
 
-        response = ollama.chat(
-            model=self.model_name,
-            messages=messages,
-        )
+        response = ollama.chat(model=self.model_name, messages=messages)
 
         return response["message"]["content"]

@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import List
 
-from ..config.store_config import StoreConfig
+from ..config import Config
 from ..documents import Document
 
 
@@ -10,7 +10,7 @@ class Store(ABC):
     Base Class of Store
     """
 
-    def __init__(self, config: StoreConfig) -> None:
+    def __init__(self, config: Config) -> None:
         """
         Initialize the store with the given configuration.
 

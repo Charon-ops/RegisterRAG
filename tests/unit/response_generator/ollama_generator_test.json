@@ -1,0 +1,12 @@
+{
+  "embedding": {
+    "embedding_type": "local"
+  },
+  "store": {
+    "store_type": "local"
+  },
+  "generation": {
+    "generation_type": "remote",
+    "generation_model_name_or_path": "ollama/qwen2:1.5b"
+  }
+}

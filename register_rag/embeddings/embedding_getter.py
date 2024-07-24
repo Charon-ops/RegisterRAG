@@ -2,7 +2,8 @@ import asyncio
 from abc import ABC, abstractmethod
 from typing import List, Dict, Any
 
-from . import Document
+from ..config import Config
+from ..documents import Document
 from ..exceptions.embedding_exceptions import LoadNotInitializedException
 
 
@@ -45,10 +46,11 @@ class EmbeddingGetter(ABC):
         and implement or override the necessary methods as described above.
     """
 
-    def __init__(self) -> None:
+    def __init__(self, config: Config) -> None:
         super().__init__()
         self.load_task: asyncio.Task = None
         self.after_embedding_task: asyncio.Task = None
+        self.config = config
 
     async def get_embedding(
         self,
