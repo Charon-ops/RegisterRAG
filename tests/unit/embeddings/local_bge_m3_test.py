@@ -4,7 +4,7 @@ import asyncio
 
 sys.path.append(f"{sys.path[0]}/../../..")
 
-from register_rag.embeddings.local import BgeM3EmbeddingGetter
+from register_rag.embeddings.local import SentenceTransformerEmbeddingGetter
 from register_rag.documents import Document
 from register_rag.config import Config
 from register_rag.config.embedding_config import EmbeddingConfig
@@ -16,7 +16,7 @@ def test_bge_m3_embedding_getter():
     """
     config_file = os.path.join(os.path.dirname(__file__), "local_bge_m3_test.json")
     config = Config.load(config_file)
-    bge_m3_embedding_getter = BgeM3EmbeddingGetter(config)
+    bge_m3_embedding_getter = SentenceTransformerEmbeddingGetter(config)
     docs = [
         Document(page_content="This is a test document.", metadata={"source": "test"})
     ]

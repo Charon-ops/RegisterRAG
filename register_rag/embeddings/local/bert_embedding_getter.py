@@ -32,6 +32,7 @@ class BertEmbeddingGetter(LocalEmbeddingGetter):
             when the `get_embedding` method is called. Defaults to False.
         """
         super().__init__(config)
+        self.weight_path = "/".join(self.weight_path.split("/")[1:])
         self.tokenizer = None
 
     async def load(self):

@@ -1,3 +1,4 @@
-__all__ = ["Config"]
+__all__ = ["Config", "Pipeline"]
 
 from .config import Config
+from .pipeline import Pipeline

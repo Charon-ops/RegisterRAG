@@ -35,4 +35,4 @@ class XinferenceEmbeddingGetter(RemoteEmbeddingGetter):
         ]
 
     async def load(self) -> None:
-        return await super().load()
+        pass

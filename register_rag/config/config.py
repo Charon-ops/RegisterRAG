@@ -5,12 +5,14 @@ from pydantic import BaseModel
 from .embedding_config import EmbeddingConfig
 from .store_config import StoreConfig
 from .generation_config import GenerationConfig
+from .prompt_config import PromptConfig
 
 
 class Config(BaseModel):
     embedding: EmbeddingConfig
     store: StoreConfig
     generation: GenerationConfig
+    prompt: PromptConfig = PromptConfig()
 
     @classmethod
     def load(cls, path: str) -> "Config":

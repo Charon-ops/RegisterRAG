@@ -1,1 +1,3 @@
-from .local import *
+__all__ = ["EmbeddingGetter"]
+
+from .embedding_getter import EmbeddingGetter

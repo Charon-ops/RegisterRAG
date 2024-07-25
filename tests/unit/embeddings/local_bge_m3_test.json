@@ -1,7 +1,7 @@
 {
   "embedding": {
     "embedding_type": "local",
-    "embedding_model_name_or_path": "BAAI/bge-m3"
+    "embedding_model_name_or_path": "sentence_transformer/BAAI/bge-m3"
   },
   "store": {
     "store_type": "local"

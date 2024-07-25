@@ -1,0 +1,26 @@
+{
+    "query": "What are the main changes in architecture?",
+    "related_docs": [
+        "are the main difference with the original architec-",
+        "of the modi\ufb01cations we made to the transformer",
+        "led to important improvements, especially for cap-",
+        "with state-of-the-art foundation models. Most",
+        "On most benchmarks, the performance improves",
+        "our network is based on the transformer architec-",
+        "2020). A signi\ufb01cant breakthrough was obtained",
+        "improvements that were subsequently proposed,",
+        "Sun: Things change, Pluto. You\u2019ve just got to accept it.",
+        "\ufb01netuning improves the performance on MMLU,",
+        "improvement in performance as we were scaling.Acknowledgements",
+        "already done, and some of the models are relatively",
+        "more parameters will lead to better performance.",
+        "this change (in bracket):",
+        "will accelerate the development of large language",
+        "improve the performance. We use a dimension of",
+        "We make several optimizations to improve the train-",
+        "It is possible to improve the performance on code",
+        "and removed boilerplate, such as headers, with reg-",
+        "from which move do they differ?"
+    ],
+    "response": "The main changes in architecture are:\n- Use of a larger model size (from 128 to 384)\n- Reduced size of the vocabulary (from 21,000 to 10,000)\n\nThese changes were made due to improvements in performance and reducing complexity. The larger model size allowed the model to learn more features and the reduced size of the vocabulary provided more flexibility in learning new words while still maintaining meaningful representations."
+}

@@ -108,3 +108,4 @@ class Loader(ABC):
         res = []
         for doc in docs:
             res.extend(await splitter.split(doc))
+        return res

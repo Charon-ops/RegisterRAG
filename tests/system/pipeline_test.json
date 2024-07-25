@@ -1,0 +1,21 @@
+{
+  "embedding": {
+    "embedding_type": "remote",
+    "embedding_model_name_or_path": "xinference/bge-m3",
+    "embedding_remote_url": "http://localhost:9997"
+  },
+  "store": {
+    "store_type": "local",
+    "store_name": "chroma",
+    "store_local_path": "/home/yumuzhihan/Documents/Code/Project/RegisterRAG/tests/system/data"
+  },
+  "generation": {
+    "generation_type": "remote",
+    "generation_model_name_or_path": "xinference/qwen2-instruct",
+    "generation_remote_url": "http://localhost:9997",
+    "generation_xinference_config": {
+      "xinference_model_size": "1_5",
+      "xinference_mdoel_quantization": "4-bit"
+    }
+  }
+}

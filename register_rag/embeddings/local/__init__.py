@@ -1,5 +1,9 @@
-__all__ = ["LocalEmbeddingGetter", "BgeM3EmbeddingGetter", "BertEmbeddingGetter"]
+__all__ = [
+    "LocalEmbeddingGetter",
+    "SentenceTransformerEmbeddingGetter",
+    "BertEmbeddingGetter",
+]
 
 from .local_embedding_getter import LocalEmbeddingGetter
-from .bge_m3_embedding_getter import BgeM3EmbeddingGetter
+from .sentence_transformer_embedding_getter import SentenceTransformerEmbeddingGetter
 from .bert_embedding_getter import BertEmbeddingGetter

@@ -49,7 +49,7 @@ class ChromaStore(LocalStore):
             raise ValueError("documents and embeddings should have the same length.")
 
         if not ids:
-            ids = [uuid.uuid4() for _ in range(len(documents))]
+            ids = [str(uuid.uuid4()) for _ in range(len(documents))]
 
         collection = self.client.get_or_create_collection(collection_name)
         collection.add(

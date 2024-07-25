@@ -11,7 +11,7 @@ from ...exceptions.embedding_exceptions import WeightPathNotValidException
 from .local_embedding_getter import LocalEmbeddingGetter
 
 
-class BgeM3EmbeddingGetter(LocalEmbeddingGetter):
+class SentenceTransformerEmbeddingGetter(LocalEmbeddingGetter):
     """
     Class: BgeM3EmbeddingGetter
 
@@ -35,6 +35,7 @@ class BgeM3EmbeddingGetter(LocalEmbeddingGetter):
             Defaults to device("cuda").
         """
         super().__init__(config)
+        self.weight_path = "/".join(self.weight_path.split("/")[1:])
 
     async def load(self):
         """
