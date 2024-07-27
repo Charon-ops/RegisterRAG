@@ -21,6 +21,7 @@ setup(
         "torch==2.3.1",
         "torchaudio==2.3.1",
         "torchvision==0.18.1",
+        "gradio==4.37.2",
     ],
     classifiers=[
         "Development Status :: 3 - Alpha",
