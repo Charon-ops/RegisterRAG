@@ -54,9 +54,19 @@ class Loader(ABC):
         if os.path.isdir(self.file_path):
             for file in os.listdir(self.file_path):
                 if os.path.isfile(os.path.join(self.file_path, file)):
-                    res.append(await self.load_file(os.path.join(self.file_path, file)))
+                    single_file_res = await self.load_file(
+                        os.path.join(self.file_path, file)
+                    )
+                    if isinstance(single_file_res, list):
+                        res.extend(single_file_res)
+                    else:
+                        res.append(single_file_res)
         else:
-            res.append(await self.load_file(self.file_path))
+            single_file_res = await self.load_file(self.file_path)
+            if isinstance(single_file_res, list):
+                res.extend(single_file_res)
+            else:
+                res.append(single_file_res)
 
         self.post_load_task = asyncio.create_task(
             self.post_load(**(post_load_args if post_load_args is not None else {}))

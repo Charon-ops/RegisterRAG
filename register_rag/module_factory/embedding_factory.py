@@ -28,6 +28,35 @@ class EmbeddingFactory:
             return cls.__create_remote_embedding(config)
 
     @classmethod
+    def get_class_name_from_config(cls, config: Config) -> str:
+        if config.embedding.embedding_type not in ["local", "remote"]:
+            raise ValueError(
+                "Invalid embedding type. Please choose 'local' or 'remote'."
+            )
+        if config.embedding.embedding_type == "local":
+            return (
+                cls.__local_embedding_map[
+                    config.embedding.embedding_model_name_or_path.split("/")[0]
+                ]
+            ).__name__
+        else:
+            return (
+                cls.__remote_embedding_map[
+                    config.embedding.embedding_model_name_or_path.split("/")[0]
+                ]
+            ).__name__
+
+    @classmethod
+    def get_config_name_from_class_name(cls, class_name: str) -> str:
+        for k in cls.__local_embedding_map:
+            if cls.__local_embedding_map[k].__name__ == class_name:
+                return k
+        for k in cls.__remote_embedding_map:
+            if cls.__remote_embedding_map[k].__name__ == class_name:
+                return k
+        raise ValueError(f"No class with name {class_name} found.")
+
+    @classmethod
     def __create_local_embedding(cls, config: Config) -> EmbeddingGetter:
         model_name = config.embedding.embedding_model_name_or_path.split("/")[0]
         if model_name not in cls.__local_embedding_map:

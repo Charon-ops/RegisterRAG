@@ -30,7 +30,7 @@ class ChromaStore(LocalStore):
     ) -> None:
         collection = self.client.get_or_create_collection(collection_name)
         if not id:
-            id = uuid.uuid4()
+            id = str(uuid.uuid4())
         collection.add(
             ids=[id],
             embeddings=[embedding],

@@ -61,3 +61,14 @@ class Pipeline:
             return response
         else:
             return response, related_docs
+
+    async def unload(self) -> None:
+        # TODO: 为所有模块添加unload方法
+        self.embedding = None
+        self.store = None
+        self.response_generator = None
+        self.prompt_generator = None
+
+        from torch import cuda
+
+        cuda.empty_cache()

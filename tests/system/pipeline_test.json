@@ -2,7 +2,8 @@
   "embedding": {
     "embedding_type": "remote",
     "embedding_model_name_or_path": "xinference/bge-m3",
-    "embedding_remote_url": "http://localhost:9997"
+    "embedding_remote_url": "http://localhost:9997",
+    "embedding_model_preload": true
   },
   "store": {
     "store_type": "local",

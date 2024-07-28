@@ -28,6 +28,27 @@ class StoreFactory:
         return cls.__local_store_map[store_name](config)
 
     @classmethod
+    def get_class_name_from_config(cls, config: Config) -> str:
+        if config.store.store_type not in ["local", "remote"]:
+            raise ValueError("Invalid store type. Please choose 'local' or 'remote'.")
+        if config.store.store_type == "local":
+            return cls.__local_store_map[config.store.store_name.split("/")[0]].__name__
+        else:
+            return cls.__remote_store_map[
+                config.store.store_name.split("/")[0]
+            ].__name__
+
+    @classmethod
+    def get_config_name_from_class_name(cls, class_name: str) -> str:
+        for k in cls.__local_embedding_map:
+            if cls.__local_embedding_map[k].__name__ == class_name:
+                return k
+        for k in cls.__remote_embedding_map:
+            if cls.__remote_embedding_map[k].__name__ == class_name:
+                return k
+        raise ValueError(f"No class with name {class_name} found.")
+
+    @classmethod
     def __create_remote_store(cls, config: Config) -> Store:
         store_name = config.store.store_name.split("/")[0]
         if store_name not in cls.__remote_store_map:
