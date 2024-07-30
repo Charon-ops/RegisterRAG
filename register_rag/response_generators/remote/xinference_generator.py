@@ -6,6 +6,18 @@ from .remote_generator import RemoteGenerator
 
 class XinferenceGenerator(RemoteGenerator):
     def __init__(self, config: Config) -> None:
+        """
+        Initialize the Xinference generator. It requires the xinference_client library to be installed. And
+        the xinference config should be provided in the RAG pipeline configuration
+
+        Args:
+            config (Config): The configuration object for the RAG pipeline.
+
+        Raises:
+            ImportError: If xinference_client is not installed.
+            ValueError: If xinference config is not provided.
+            RuntimeError: If the model is not found or could not be launched.
+        """
         super().__init__(config)
         try:
             import xinference_client
@@ -44,6 +56,19 @@ class XinferenceGenerator(RemoteGenerator):
         history_messages: List[ResponseMessage] = None,
         system_prompt: str = None,
     ) -> str:
+        """
+        Generate a response using the Xinference library. If the prompt is over the maximum token limit,
+        it will raise an error. More information could be found in the xinference documentation.
+
+        Args:
+            prompt (str): The prompt to generate the response.
+            history_messages (List[ResponseMessage], optional): The history messages to generate the response.
+            Defaults to None.
+            system_prompt (str, optional): The system prompt to generate the response. Defaults to None.
+
+        Returns:
+            str: The generated response.
+        """
         if not history_messages:
             history_messages = []
         response = self.model.chat(

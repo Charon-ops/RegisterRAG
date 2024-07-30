@@ -6,6 +6,15 @@ from ..config import Config
 
 
 class PromptGenerator(ABC):
+    """
+    A base class for all prompt generators.
+
+    You can call the `get_prompt` method to generate a prompt for the query and related documents.
+
+    If you want to implement a new prompt generator, you should inherit this class and implement the
+    `get_prompt` method.
+    """
+
     def __init__(self, config: Config) -> None:
         super().__init__()
         self.config = Config

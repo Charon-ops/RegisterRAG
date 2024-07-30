@@ -25,6 +25,21 @@ class OllamaGenerator(RemoteGenerator):
         history_messages: List[ResponseMessage] = None,
         system_prompt: str = None,
     ) -> str:
+        """
+        Generate a response using the Ollama library.
+
+        Args:
+            prompt (str): The prompt to generate the response.
+            history_messages (List[ResponseMessage], optional): The history messages to generate the response.
+            Defaults to None.
+            system_prompt (str, optional): The system prompt to generate the response. Defaults to None.
+
+        Raises:
+            ImportError: If the Ollama library is not installed.
+
+        Returns:
+            str: The generated response.
+        """
         try:
             import ollama
         except:

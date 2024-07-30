@@ -75,7 +75,7 @@ class Loader(ABC):
         return res
 
     @abstractmethod
-    async def load_file(self, file_path: str) -> Document:
+    async def load_file(self, file_path: str) -> Document | List[Document]:
         """
         Load a single file from the file path.
 
@@ -83,7 +83,9 @@ class Loader(ABC):
             file_path (str): The path to the file to load.
 
         Returns:
-            Document: The document loaded from the file.
+            Document | List[Document]: The document loaded from the file. If a list is returned,
+            the load method will append all documents in the list to the final result. The returned type
+            of `load` method will always be a list of documents.
         """
         raise NotImplementedError("load_file method must be implemented in subclass")
 

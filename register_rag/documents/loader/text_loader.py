@@ -6,6 +6,10 @@ from .. import Document
 
 
 class TextLoader(Loader):
+    """
+    A loader for text files. The loader loads text files from the file path.
+    """
+
     def __init__(self, file_path: str) -> None:
         super().__init__(file_path)
 

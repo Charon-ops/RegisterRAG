@@ -47,6 +47,12 @@ class EmbeddingGetter(ABC):
     """
 
     def __init__(self, config: Config) -> None:
+        """
+        Initialize the EmbeddingGetter class.
+
+        Args:
+            config (Config): The configuration object for the RAG pipeline.
+        """
         super().__init__()
         self.load_task: asyncio.Task = None
         self.after_embedding_task: asyncio.Task = None
@@ -119,7 +125,7 @@ class EmbeddingGetter(ABC):
             List[List[float]]: A list of embeddings of the documents.
         """
         raise NotImplementedError(
-            "_get_embedding method is not implemented, it should be implemented in the sub class."
+            "embedding method is not implemented, it should be implemented in the sub class."
         )
 
     async def post_embedding(self, **kwargs) -> None:

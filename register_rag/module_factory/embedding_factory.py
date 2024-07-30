@@ -5,6 +5,12 @@ from ..embeddings.remote import XinferenceEmbeddingGetter
 
 
 class EmbeddingFactory:
+    """
+    A factory class to create the embedding getter object.
+
+    You can use the `create` method to create the embedding getter object.
+    """
+
     __local_embedding_map = {
         "bert": BertEmbeddingGetter,
         "sentence_transformer": SentenceTransformerEmbeddingGetter,
@@ -16,6 +22,18 @@ class EmbeddingFactory:
 
     @classmethod
     def create(cls, config: Config) -> EmbeddingGetter:
+        """
+        Create the embedding getter object.
+
+        Args:
+            config (Config): The configuration object for the RAG pipeline.
+
+        Raises:
+            ValueError: If the embedding type is not 'local' or 'remote'.
+
+        Returns:
+            EmbeddingGetter: The embedding getter object.
+        """
         embedding_config = config.embedding
         if embedding_config.embedding_type not in ["local", "remote"]:
             raise ValueError(
@@ -29,6 +47,18 @@ class EmbeddingFactory:
 
     @classmethod
     def get_class_name_from_config(cls, config: Config) -> str:
+        """
+        Get the class name of the embedding getter from the configuration
+
+        Args:
+            config (Config): The configuration object for the RAG pipeline.
+
+        Raises:
+            ValueError: If the embedding type is not 'local' or 'remote'.
+
+        Returns:
+            str: The class name of the embedding getter.
+        """
         if config.embedding.embedding_type not in ["local", "remote"]:
             raise ValueError(
                 "Invalid embedding type. Please choose 'local' or 'remote'."
@@ -48,6 +78,18 @@ class EmbeddingFactory:
 
     @classmethod
     def get_config_name_from_class_name(cls, class_name: str) -> str:
+        """
+        Get the configuration name of the embedding getter from the class name
+
+        Args:
+            class_name (str): The class name of the embedding getter.
+
+        Raises:
+            ValueError: If the class name is not found in the local or remote embedding map.
+
+        Returns:
+            str: The configuration name of the embedding getter.
+        """
         for k in cls.__local_embedding_map:
             if cls.__local_embedding_map[k].__name__ == class_name:
                 return k
@@ -58,6 +100,18 @@ class EmbeddingFactory:
 
     @classmethod
     def __create_local_embedding(cls, config: Config) -> EmbeddingGetter:
+        """
+        Create a local embedding getter object.
+
+        Args:
+            config (Config): The configuration object for the RAG pipeline.
+
+        Raises:
+            ValueError: If the model name is not found in the local embedding map.
+
+        Returns:
+            EmbeddingGetter: The local embedding getter object.
+        """
         model_name = config.embedding.embedding_model_name_or_path.split("/")[0]
         if model_name not in cls.__local_embedding_map:
             raise ValueError(
@@ -67,6 +121,18 @@ class EmbeddingFactory:
 
     @classmethod
     def __create_remote_embedding(cls, config: Config) -> EmbeddingGetter:
+        """
+        Create a remote embedding getter object.
+
+        Args:
+            config (Config): The configuration object for the RAG pipeline.
+
+        Raises:
+            ValueError: If the model name is not found in the remote embedding map.
+
+        Returns:
+            EmbeddingGetter: The remote embedding getter object.
+        """
         model_name = config.embedding.embedding_model_name_or_path.split("/")[0]
         if model_name not in cls.__remote_embedding_map:
             raise ValueError(

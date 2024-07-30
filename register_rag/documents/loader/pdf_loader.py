@@ -3,6 +3,14 @@ from .loader import Loader
 
 
 class PDFLoader(Loader):
+    """
+    A loader for PDF files. The loader uses the `pypdf` package to load PDF files.
+
+    The file path should be a string representing the path to the PDF file, or a directory of PDF files.
+    When a directory is passed, the directory can only contain PDF files, and the loader will load
+    all files in the directory documents.
+    """
+
     def __init__(self, file_path: str) -> None:
         super().__init__(file_path)
 
